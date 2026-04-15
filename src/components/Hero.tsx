@@ -36,10 +36,10 @@ export default function Hero() {
             transition={{ duration: 0.8, delay: 0.3 }}
             className="text-5xl md:text-7xl lg:text-[5.5rem] font-medium leading-[1.05] tracking-[-0.03em] text-foreground mb-8"
           >
-            The lead generation system
-            <br className="hidden md:block" /> real estate agents{" "}
+            The lead engine
+            <br className="hidden md:block" /> real estate{" "}
             <span className="text-accent relative inline-block">
-              never had.
+              was missing.
               <span className="absolute -bottom-1 left-0 w-full h-[1px] bg-accent/50 hidden md:block" />
               <span className="absolute -right-3 top-0 h-full w-[1px] bg-accent/50 hidden md:block" />
             </span>
