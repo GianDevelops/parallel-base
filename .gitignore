@@ -43,3 +43,4 @@ design-reference.html
 
 # Local Netlify folder
 .netlify
+.claude/worktrees/
