@@ -17,30 +17,20 @@ export default function Ads() {
           </AnimateIn>
           <AnimateIn delay={0.1}>
             <h3 className="text-4xl md:text-5xl font-medium text-foreground tracking-tight mb-8">
-              Your next buyer is already out there. We put your listing in front of them.
+              Ads that start with your property&apos;s DNA.
             </h3>
           </AnimateIn>
           <AnimateIn delay={0.2}>
             <p className="text-muted text-lg mb-8 font-light leading-relaxed">
-              Every ad campaign we build starts with your property&apos;s DNA —
-              its price, location, lifestyle, and surroundings. Our targeting
-              algorithm turns those details into the audience most likely to
-              convert.
+              Our targeting algorithm analyzes your listing — price point,
+              location, property type, nearby amenities, lifestyle markers — and
+              builds the audience most likely to act.
             </p>
           </AnimateIn>
           <AnimateIn delay={0.25}>
-            <p className="text-muted text-base mb-8 font-light leading-relaxed">
-              Our algorithm analyzes your listing&apos;s characteristics — price
-              point, location, property type, nearby amenities, school districts,
-              lifestyle markers — and uses that data to determine the right
-              geographies, interest categories, placements, and audience segments.
-            </p>
-          </AnimateIn>
-          <AnimateIn delay={0.3}>
             <p className="text-foreground text-base mb-8 font-medium leading-relaxed">
-              The result: your ad shows up in front of people who are already
-              looking for exactly what you&apos;re selling. The right buyer, at
-              the right time, on the right platform.
+              The result: your ad reaches the right buyer, on the right platform,
+              at the right time. Not a neighborhood away. Not a price bracket off.
             </p>
           </AnimateIn>
         </div>

@@ -117,14 +117,14 @@ export default function LandingPages() {
           </AnimateIn>
           <AnimateIn delay={0.1}>
             <h3 className="text-3xl md:text-5xl font-medium text-light-text tracking-tight mb-6">
-              Not another pretty page that does nothing.
+              Engineered to convert.
             </h3>
           </AnimateIn>
           <AnimateIn delay={0.15}>
             <p className="text-light-muted text-lg border-l border-light-text pl-6">
-              A beautiful aesthetic is the baseline, not the deliverable. We
-              engineer digital environments designed specifically to intercept
-              traffic and convert it into qualified CRM data.
+              Every Parallel Base landing page is built to turn visitors into
+              leads. Strategic lead capture, fast load times, and direct CRM
+              integration — not a template, a system.
             </p>
           </AnimateIn>
         </div>
