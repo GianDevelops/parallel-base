@@ -9,19 +9,19 @@ const steps = [
   {
     number: "01",
     headline: "Place your order.",
-    body: "Select your page type, configure your ad budget via our portal, and upload your property assets. Takes minutes.",
+    body: "Select what you need — landing page, ad campaign, or both — plus any add-ons. Add your property or market details and check out. Takes minutes.",
     active: true,
   },
   {
     number: "02",
-    headline: "We build the engine.",
-    body: "Our architecture team provisions your custom environment. Data scientists map the targeting algorithms and construct the ad creatives. Connected to your CRM.",
+    headline: "We build it.",
+    body: "Our team builds your campaign using your property data, our targeting algorithm, and conversion-tested page architecture.",
     active: false,
   },
   {
     number: "03",
-    headline: "We launch. You close.",
-    body: "The switch is flipped. Traffic flows. Leads drop into your inbox instantly, structured with full attribution data.",
+    headline: "We launch it.",
+    body: "Your campaign goes live. Leads start flowing directly into your CRM. You focus on closing.",
     active: false,
   },
 ];

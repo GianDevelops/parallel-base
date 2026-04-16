@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
+import Image from "next/image";
 import AnimateIn from "./AnimateIn";
 import {
   Crosshair,
@@ -60,6 +61,7 @@ const pageTypes = [
     ),
     body: "A dedicated environment free from the distractions of a portal. High-res galleries, immersive neighborhood data, and a layout engineered to push the user toward scheduling a private showing.",
     bestFor: "High-End Trophy Listings",
+    image: "/images/listing/example.jpg",
   },
   {
     id: "brand",
@@ -76,6 +78,7 @@ const pageTypes = [
     ),
     body: "Hyper-local community guides that establish absolute authority. Designed to capture long-tail organic search and serve as the destination for top-of-funnel ad campaigns targeting specific territories.",
     bestFor: "Farming & Territory Domination",
+    image: "/images/brand/example.jpg",
   },
   {
     id: "buildings",
@@ -90,6 +93,7 @@ const pageTypes = [
     ),
     body: "Complex architectures displaying availability matrices, floorplans, and holistic building specs. Perfect for new developments or cornering the market on specific luxury condo buildings.",
     bestFor: "New Devs & Condo Specialists",
+    image: "/images/buildings/example.jpg",
   },
 ];
 
@@ -173,11 +177,22 @@ export default function LandingPages() {
             </div>
 
             {/* Tab Content */}
-            <div className="p-8 md:p-14 bg-background min-h-[300px] flex items-center relative overflow-hidden">
-              <div className="absolute right-0 top-0 bottom-0 w-1/3 bg-gradient-to-l from-surface/50 to-transparent hidden lg:block" />
-              <div className="absolute right-1/3 top-0 bottom-0 w-[1px] bg-gradient-to-b from-transparent via-border to-transparent hidden lg:block" />
+            <div className="p-8 md:p-14 bg-background min-h-[420px] relative overflow-hidden flex flex-col lg:flex-row gap-8 lg:gap-12">
+              {/* Screenshot */}
+              <div className="hidden lg:block absolute right-0 top-0 bottom-0 w-[42%] overflow-hidden">
+                <div key={current.id} className="tab-animate-in h-full">
+                  <Image
+                    src={current.image}
+                    alt={`${current.label} page example`}
+                    width={600}
+                    height={450}
+                    className="w-full h-full object-cover object-top opacity-80 hover:opacity-100 transition-opacity duration-500"
+                  />
+                </div>
+                <div className="absolute inset-0 bg-gradient-to-r from-background via-background/40 to-transparent pointer-events-none" />
+              </div>
 
-              <div key={current.id} className="w-full relative z-10 max-w-2xl tab-animate-in">
+              <div key={current.id + "-text"} className="relative z-10 max-w-lg pt-4 tab-animate-in">
                 <h4 className="text-3xl font-medium text-foreground mb-6">
                   {current.headline}
                 </h4>
@@ -190,6 +205,17 @@ export default function LandingPages() {
                     {current.bestFor}
                   </span>
                 </div>
+              </div>
+
+              {/* Mobile image */}
+              <div className="lg:hidden mt-6 border border-border overflow-hidden">
+                <Image
+                  src={current.image}
+                  alt={`${current.label} page example`}
+                  width={600}
+                  height={400}
+                  className="w-full h-auto object-cover"
+                />
               </div>
             </div>
           </div>

@@ -7,6 +7,7 @@ import LandingPages from "@/components/LandingPages";
 import Ads from "@/components/Ads";
 import Integration from "@/components/Integration";
 import Process from "@/components/Process";
+import Reviews from "@/components/Reviews";
 import Footer from "@/components/Footer";
 
 export default function Home() {
@@ -22,6 +23,7 @@ export default function Home() {
         <Ads />
         <Integration />
         <Process />
+        <Reviews />
       </main>
       <Footer />
     </>

@@ -17,9 +17,7 @@ export default function Ads() {
           </AnimateIn>
           <AnimateIn delay={0.1}>
             <h3 className="text-4xl md:text-5xl font-medium text-foreground tracking-tight mb-8">
-              Your next buyer is already out there.
-              <br />
-              We put your listing in front of them.
+              Your next buyer is already out there. We put your listing in front of them.
             </h3>
           </AnimateIn>
           <AnimateIn delay={0.2}>
