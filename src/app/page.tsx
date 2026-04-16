@@ -1,5 +1,6 @@
 import Navigation from "@/components/Navigation";
 import Hero from "@/components/Hero";
+import AdShowcase from "@/components/AdShowcase";
 import StatusQuo from "@/components/StatusQuo";
 import Solution from "@/components/Solution";
 import LandingPages from "@/components/LandingPages";
@@ -14,6 +15,7 @@ export default function Home() {
       <Navigation />
       <main>
         <Hero />
+        <AdShowcase />
         <StatusQuo />
         <Solution />
         <LandingPages />
