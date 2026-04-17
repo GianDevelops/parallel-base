@@ -16,19 +16,6 @@ export default function Hero() {
 
       <div className="max-w-screen-2xl mx-auto px-6 md:px-12 relative z-10 w-full flex flex-col items-start pt-10">
         <div className="max-w-5xl">
-          {/* Overline */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="flex items-center gap-3 mb-8"
-          >
-            <div className="h-[1px] w-12 bg-accent" />
-            <span className="text-accent text-xs font-semibold tracking-[0.2em] uppercase">
-              Built for Real Estate
-            </span>
-          </motion.div>
-
           {/* Headline */}
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
