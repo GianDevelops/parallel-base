@@ -6,13 +6,6 @@ import AnimateIn from "./AnimateIn";
 
 const reviews = [
   {
-    name: "Jessica Martinez",
-    title: "Luxury Agent, Compass Miami",
-    text: "Parallel Base completely changed how I market my listings. My last waterfront property got 47 qualified leads in the first week. The landing page was stunning and the ad targeting was surgical. I've never seen results like this.",
-    date: "03/2026",
-    image: "/images/reviews/jessica-martinez.jpg",
-  },
-  {
     name: "Michael Torres",
     title: "Team Lead, Coldwell Banker Scottsdale",
     text: "I used to spend hours trying to set up Facebook ads that never worked. Now I just submit my listing details and Parallel Base handles everything. The leads actually show up to appointments. Game changer.",
@@ -27,25 +20,11 @@ const reviews = [
     image: "/images/reviews/sarah-kim.jpg",
   },
   {
-    name: "David Reyes",
-    title: "Realtor, eXp Realty Los Angeles",
-    text: "I was skeptical at first but the numbers don't lie. My Parallel Base landing page converts at 8.2% — my old template was barely at 1%. The Google Ads they built are dialed in perfectly for my market.",
-    date: "01/2026",
-    image: "/images/reviews/david-reyes.jpg",
-  },
-  {
     name: "Amanda Chen",
     title: "Luxury Specialist, Douglas Elliman NYC",
     text: "What I love most is that I don't have to think about it. I place the order, they build the page and launch the ads, and leads start flowing into my CRM. It's the system I always wanted but could never build myself.",
     date: "02/2026",
     image: "/images/reviews/amanda-chen.jpg",
-  },
-  {
-    name: "Ryan O'Brien",
-    title: "Agent, Compass San Francisco",
-    text: "The brand page they built for my Noe Valley farm is incredible. I'm ranking on Google for neighborhood searches now and getting organic leads on top of the paid ones. Best investment I've made in my business.",
-    date: "03/2026",
-    image: "/images/reviews/ryan-obrien.jpg",
   },
   {
     name: "Nicole Alvarez",
@@ -67,13 +46,6 @@ const reviews = [
     text: "I've tried every landing page tool out there and nothing comes close. The load speed alone makes a huge difference — buyers actually stay on the page. And the MLS integration keeps them browsing my other listings.",
     date: "02/2026",
     image: "/images/reviews/lauren-mitchell.jpg",
-  },
-  {
-    name: "Carlos Vega",
-    title: "Agent, ONE Sotheby's Miami Beach",
-    text: "The fact that the ads and landing pages are built as one system is what sets Parallel Base apart. Everything is connected. My conversion rate tripled compared to when I was running ads to my brokerage website.",
-    date: "01/2026",
-    image: "/images/reviews/carlos-vega.jpg",
   },
 ];
 
