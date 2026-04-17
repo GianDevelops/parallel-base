@@ -3,31 +3,21 @@
 import { useState, useCallback } from "react";
 import Image from "next/image";
 import AnimateIn from "./AnimateIn";
-import {
-  Crosshair,
-  MagnifyingGlass,
-  HouseLine,
-  Gauge,
-} from "@phosphor-icons/react";
 
 const features = [
   {
-    icon: Crosshair,
     title: "Strategic Lead Capture",
     desc: "Multiple conversion points placed where visitors are most likely to act. Not one form buried at the bottom.",
   },
   {
-    icon: MagnifyingGlass,
     title: "SEO & AEO Optimized",
     desc: "Built for both traditional search engines and AI-driven answer engines. Your pages get found.",
   },
   {
-    icon: Gauge,
     title: "Sub-millisecond Load Times",
     desc: "Clean, fast code. No bloated builders. No drag-and-drop lag.",
   },
   {
-    icon: HouseLine,
     title: "MLS IDX Integration",
     desc: "Display similar active listings alongside your property. Keep visitors on your page longer.",
   },
@@ -119,20 +109,16 @@ export default function LandingPages() {
 
         {/* Features Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-y-10 gap-x-8 mb-20">
-          {features.map((f, i) => {
-            const Icon = f.icon;
-            return (
+          {features.map((f, i) => (
               <AnimateIn key={f.title} delay={0.05 * i}>
                 <div className="hover-border-accent-dark border-t border-light-border pt-6 group">
-                  <Icon className="text-2xl text-light-muted group-hover:text-background transition-colors mb-4 block w-6 h-6" />
                   <h5 className="text-light-text font-medium mb-2">
                     {f.title}
                   </h5>
                   <p className="text-sm text-light-muted font-light">{f.desc}</p>
                 </div>
               </AnimateIn>
-            );
-          })}
+          ))}
         </div>
 
         {/* Tabbed Interface */}
