@@ -39,9 +39,8 @@ export default function Hero() {
             transition={{ duration: 0.7, delay: 0.5 }}
             className="text-lg md:text-xl text-muted max-w-2xl font-light mb-12 leading-relaxed border-l border-border pl-6"
           >
-            Parallel Base builds high-performance landing pages and
-            precision-targeted ad campaigns for real estate agents. Fully
-            integrated. Fully managed. Built to convert.
+            High-performance landing pages and precision-targeted ad campaigns
+            for real estate agents.
           </motion.p>
 
           {/* CTAs */}
