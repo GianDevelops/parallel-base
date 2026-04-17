@@ -5,9 +5,7 @@ import Image from "next/image";
 import AnimateIn from "./AnimateIn";
 import {
   Crosshair,
-  Image as ImageIcon,
   MagnifyingGlass,
-  Database,
   HouseLine,
   Gauge,
 } from "@phosphor-icons/react";
@@ -16,32 +14,22 @@ const features = [
   {
     icon: Crosshair,
     title: "Strategic Lead Capture",
-    desc: "Frictionless forms integrated natively into the layout. No intrusive pop-ups, just logical conversion points.",
-  },
-  {
-    icon: ImageIcon,
-    title: "High-Impact Property Visuals",
-    desc: "Cinematic hero sections and dynamic masonry galleries that treat high-end photography with architectural respect.",
+    desc: "Multiple conversion points placed where visitors are most likely to act. Not one form buried at the bottom.",
   },
   {
     icon: MagnifyingGlass,
     title: "SEO & AEO Optimized",
-    desc: "Structure built for Google's crawlers and AI search engines. Schema markup injected systematically.",
+    desc: "Built for both traditional search engines and AI-driven answer engines. Your pages get found.",
   },
   {
-    icon: Database,
-    title: "CRM Integration",
-    desc: "Webhooks configured out of the box. Leads flow directly into Follow Up Boss, Salesforce, or your chosen system.",
+    icon: Gauge,
+    title: "Sub-millisecond Load Times",
+    desc: "Clean, fast code. No bloated builders. No drag-and-drop lag.",
   },
   {
     icon: HouseLine,
     title: "MLS IDX Integration",
-    desc: "Live real estate data streams connected cleanly via API, avoiding clunky iframes that destroy loading speeds.",
-  },
-  {
-    icon: Gauge,
-    title: "Sub-millisecond Loads",
-    desc: "Built on edge networks. Ad clicks bounce if the page is slow. Our architecture ensures instant delivery globally.",
+    desc: "Display similar active listings alongside your property. Keep visitors on your page longer.",
   },
 ];
 
@@ -130,7 +118,7 @@ export default function LandingPages() {
         </div>
 
         {/* Features Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-12 gap-x-8 mb-24">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-y-10 gap-x-8 mb-20">
           {features.map((f, i) => {
             const Icon = f.icon;
             return (
