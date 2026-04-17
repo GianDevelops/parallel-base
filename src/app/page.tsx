@@ -13,10 +13,10 @@ export default function Home() {
       <Navigation />
       <main>
         <Hero />
-        <AdShowcase />
         <StatusQuo />
         <LandingPages />
         <Ads />
+        <AdShowcase />
         <Integration />
       </main>
       <Footer />
