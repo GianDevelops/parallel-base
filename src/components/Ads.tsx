@@ -27,12 +27,6 @@ export default function Ads() {
               it builds the audience most likely to act.
             </p>
           </AnimateIn>
-          <AnimateIn delay={0.25}>
-            <p className="text-foreground text-base mb-8 font-medium leading-relaxed">
-              The result: your ad reaches the right buyer, on the right platform,
-              at the right time. Not a neighborhood away. Not a price bracket off.
-            </p>
-          </AnimateIn>
         </div>
 
         {/* Right column — Platform cards */}
