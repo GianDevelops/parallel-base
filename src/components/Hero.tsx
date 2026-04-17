@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight } from "@phosphor-icons/react";
 
 export default function Hero() {
@@ -14,55 +15,95 @@ export default function Hero() {
       <div className="absolute top-1/4 left-1/4 w-[300px] h-[300px] bg-accent/15 rounded-full blur-[40px] pointer-events-none opacity-50 z-0" />
       <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-accent/10 rounded-full blur-[40px] pointer-events-none opacity-30 z-0" />
 
-      <div className="max-w-screen-2xl mx-auto px-6 md:px-12 relative z-10 w-full flex flex-col items-start pt-10">
-        <div className="max-w-5xl">
-          {/* Headline */}
-          <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.3 }}
-            className="text-5xl md:text-7xl lg:text-[5.5rem] font-medium leading-[1.05] tracking-[-0.03em] text-foreground mb-8"
-          >
-            The lead engine
-            <br className="hidden md:block" /> real estate{" "}
-            <span className="text-accent relative inline-block">
-              was missing.
-              <span className="absolute -bottom-1 left-0 w-full h-[1px] bg-accent/50 hidden md:block" />
-              <span className="absolute -right-3 top-0 h-full w-[1px] bg-accent/50 hidden md:block" />
-            </span>
-          </motion.h1>
+      <div className="max-w-screen-2xl mx-auto px-6 md:px-12 relative z-10 w-full pt-10">
+        <div className="grid lg:grid-cols-12 gap-10 lg:gap-8 items-center">
+          <div className="lg:col-span-7">
+            {/* Headline */}
+            <motion.h1
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+              className="text-5xl md:text-7xl lg:text-[5rem] font-medium leading-[1.05] tracking-[-0.03em] text-foreground mb-8"
+            >
+              The lead engine
+              <br className="hidden md:block" /> real estate{" "}
+              <span className="text-accent relative inline-block">
+                was missing.
+                <span className="absolute -bottom-1 left-0 w-full h-[1px] bg-accent/50 hidden md:block" />
+                <span className="absolute -right-3 top-0 h-full w-[1px] bg-accent/50 hidden md:block" />
+              </span>
+            </motion.h1>
 
-          {/* Subheadline */}
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.5 }}
-            className="text-lg md:text-xl text-muted max-w-2xl font-light mb-12 leading-relaxed border-l border-border pl-6"
-          >
-            High-performance landing pages and precision-targeted ad campaigns
-            for real estate agents.
-          </motion.p>
+            {/* Subheadline */}
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.5 }}
+              className="text-lg md:text-xl text-muted max-w-2xl font-light mb-12 leading-relaxed border-l border-border pl-6"
+            >
+              High-performance landing pages and precision-targeted ad campaigns
+              for real estate agents.
+            </motion.p>
 
-          {/* CTAs */}
+            {/* CTAs */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.7 }}
+              className="flex flex-col sm:flex-row items-start sm:items-center gap-6"
+            >
+              <a
+                href="#why"
+                className="bg-accent text-background px-8 py-4 text-sm font-bold uppercase tracking-[0.15em] hover:bg-white transition-colors inline-flex items-center"
+              >
+                See How It Works
+              </a>
+              <Link
+                href="/get-started"
+                className="text-foreground text-sm font-medium uppercase tracking-[0.15em] hover:text-accent transition-colors flex items-center gap-2 group"
+              >
+                Launch Your First Campaign{" "}
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </motion.div>
+          </div>
+
+          {/* Laptop visual */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.7 }}
-            className="flex flex-col sm:flex-row items-start sm:items-center gap-6"
+            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ duration: 1, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            className="lg:col-span-5 relative"
           >
-            <a
-              href="#why"
-              className="bg-accent text-background px-8 py-4 text-sm font-bold uppercase tracking-[0.15em] hover:bg-white transition-colors inline-flex items-center"
-            >
-              See How It Works
-            </a>
-            <Link
-              href="/get-started"
-              className="text-foreground text-sm font-medium uppercase tracking-[0.15em] hover:text-accent transition-colors flex items-center gap-2 group"
-            >
-              Launch Your First Campaign{" "}
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </Link>
+            {/* Backdrop glows */}
+            <div className="absolute inset-0 -m-16 md:-m-24 pointer-events-none">
+              {/* Warm glow — left */}
+              <div
+                className="absolute top-1/2 left-0 -translate-y-1/2 w-[70%] h-[90%] rounded-full blur-[80px] opacity-70"
+                style={{
+                  background:
+                    "radial-gradient(circle, rgba(255, 170, 90, 0.45) 0%, rgba(255, 120, 60, 0.15) 40%, transparent 70%)",
+                }}
+              />
+              {/* Teal glow — right */}
+              <div
+                className="absolute top-1/2 right-0 -translate-y-1/2 w-[70%] h-[90%] rounded-full blur-[80px] opacity-80"
+                style={{
+                  background:
+                    "radial-gradient(circle, rgba(0, 229, 204, 0.45) 0%, rgba(0, 180, 220, 0.15) 40%, transparent 70%)",
+                }}
+              />
+            </div>
+
+            <Image
+              src="/images/hero/hero-laptop.png"
+              alt="Parallel Base landing page shown on a MacBook"
+              width={1200}
+              height={800}
+              priority
+              sizes="(max-width: 1024px) 90vw, 40vw"
+              className="w-full h-auto relative z-10"
+            />
           </motion.div>
         </div>
       </div>
