@@ -879,7 +879,7 @@ export default function OrderBot() {
   }
 
   return (
-    <div className="w-full max-w-[480px] mx-auto h-full bg-[#050505] flex flex-col border-x border-border">
+    <div className="w-full max-w-[480px] mx-auto h-full bg-[#050505] flex flex-col border-x border-border overflow-hidden">
       {/* Header */}
       <div className="px-5 py-3.5 border-b border-border flex items-center gap-3 bg-[#080808]">
         <div className="w-[38px] h-[38px] bg-background border border-border flex items-center justify-center text-foreground font-extrabold text-[13px]">
@@ -897,7 +897,7 @@ export default function OrderBot() {
       </div>
 
       {/* Chat area */}
-      <div className="flex-1 px-4 py-5 overflow-y-auto flex flex-col">
+      <div className="flex-1 min-h-0 px-4 py-5 overflow-y-auto flex flex-col">
         {msgs.map((m, i) =>
           m.from === "user" ? (
             <UserBubble key={i}>{m.text}</UserBubble>
