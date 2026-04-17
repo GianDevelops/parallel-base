@@ -38,7 +38,6 @@ const pageTypes = [
       </>
     ),
     body: "A dedicated environment free from the distractions of a portal. High-res galleries, immersive neighborhood data, and a layout engineered to push the user toward scheduling a private showing.",
-    bestFor: "High-End Trophy Listings",
     image: "/images/listing/example.jpg",
   },
   {
@@ -55,7 +54,6 @@ const pageTypes = [
       </>
     ),
     body: "Hyper-local community guides that establish absolute authority. Designed to capture long-tail organic search and serve as the destination for top-of-funnel ad campaigns targeting specific territories.",
-    bestFor: "Farming & Territory Domination",
     image: "/images/brand/example.jpg",
   },
   {
@@ -69,8 +67,7 @@ const pageTypes = [
         its own stage.
       </>
     ),
-    body: "Complex architectures displaying availability matrices, floorplans, and holistic building specs. Perfect for new developments or cornering the market on specific luxury condo buildings.",
-    bestFor: "New Devs & Condo Specialists",
+    body: "Showcase floor plans, pricing, amenities, and lifestyle content for any building. Whether it\u2019s a pre-construction project or an established building you specialize in.",
     image: "/images/buildings/example.jpg",
   },
 ];
@@ -121,7 +118,7 @@ export default function LandingPages() {
           ))}
         </div>
 
-        {/* Tabbed Interface */}
+        {/* Tabbed Interface — V2: Card stack with depth */}
         <AnimateIn>
           <div className="border border-border bg-background p-2 max-w-5xl mx-auto">
             {/* Tab Headers */}
@@ -150,38 +147,52 @@ export default function LandingPages() {
               ))}
             </div>
 
-            {/* Tab Content */}
-            <div className="p-8 md:p-14 bg-background min-h-[420px] relative overflow-hidden flex flex-col lg:flex-row gap-8 lg:gap-12">
-              {/* Screenshot */}
-              <div className="hidden lg:block absolute right-0 top-0 bottom-0 w-[42%] overflow-hidden">
-                <div key={current.id} className="tab-animate-in h-full">
-                  <Image
-                    src={current.image}
-                    alt={`${current.label} page example`}
-                    width={600}
-                    height={450}
-                    className="w-full h-full object-cover object-top opacity-80 hover:opacity-100 transition-opacity duration-500"
-                  />
-                </div>
-                <div className="absolute inset-0 bg-gradient-to-r from-background via-background/40 to-transparent pointer-events-none" />
-              </div>
-
-              <div key={current.id + "-text"} className="relative z-10 max-w-lg pt-4 tab-animate-in">
+            {/* Tab Content — Card stack with depth */}
+            <div className="p-8 md:p-14 bg-background min-h-[420px] relative overflow-hidden flex flex-col lg:flex-row gap-8 lg:gap-12 items-center">
+              {/* Text side */}
+              <div
+                key={current.id + "-text"}
+                className="relative z-10 lg:w-[45%] pt-4 tab-animate-in"
+              >
                 <h4 className="text-3xl font-medium text-foreground mb-6">
                   {current.headline}
                 </h4>
-                <p className="text-muted leading-relaxed font-light mb-8">
+                <p className="text-muted leading-relaxed font-light">
                   {current.body}
                 </p>
-                <div className="flex items-center gap-4 text-sm">
-                  <span className="text-foreground font-medium">Best for:</span>
-                  <span className="bg-accent/10 text-accent font-semibold px-3 py-1 border border-accent/20">
-                    {current.bestFor}
-                  </span>
+              </div>
+
+              {/* Rotated floating card image */}
+              <div className="hidden lg:flex lg:w-[55%] justify-center items-center py-4">
+                <div
+                  key={current.id}
+                  className="tab-animate-in relative"
+                  style={{
+                    transform: "rotate(2.5deg)",
+                    transformOrigin: "center center",
+                  }}
+                >
+                  {/* Shadow layer underneath for depth */}
+                  <div
+                    className="absolute inset-0 bg-black/40 blur-xl"
+                    style={{
+                      transform: "translate(8px, 12px)",
+                    }}
+                  />
+                  {/* Card frame */}
+                  <div className="relative border border-[#333] bg-[#1A1A1A] p-1.5">
+                    <Image
+                      src={current.image}
+                      alt={`${current.label} page example`}
+                      width={520}
+                      height={380}
+                      className="w-full h-auto object-cover object-top"
+                    />
+                  </div>
                 </div>
               </div>
 
-              {/* Mobile image */}
+              {/* Mobile image (no rotation) */}
               <div className="lg:hidden mt-6 border border-border overflow-hidden">
                 <Image
                   src={current.image}
