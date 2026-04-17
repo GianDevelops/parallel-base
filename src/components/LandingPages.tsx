@@ -186,6 +186,7 @@ export default function LandingPages() {
                       alt={`${current.label} page example`}
                       width={520}
                       height={380}
+                      sizes="520px"
                       className="w-full h-auto object-cover object-top"
                     />
                   </div>
@@ -199,6 +200,7 @@ export default function LandingPages() {
                   alt={`${current.label} page example`}
                   width={600}
                   height={400}
+                  sizes="(max-width: 1024px) 100vw, 0px"
                   className="w-full h-auto object-cover"
                 />
               </div>

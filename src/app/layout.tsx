@@ -32,6 +32,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="h-full antialiased">
+      <head>
+        <link
+          rel="preload"
+          as="font"
+          type="font/woff2"
+          href="/fonts/Satoshi-Variable.woff2"
+          crossOrigin="anonymous"
+        />
+      </head>
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );
