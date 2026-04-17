@@ -43,7 +43,7 @@ const reviews = [
   {
     name: "Lauren Mitchell",
     title: "Realtor, Berkshire Hathaway Newport Beach",
-    text: "I've tried every landing page tool out there and nothing comes close. The load speed alone makes a huge difference — buyers actually stay on the page. And the MLS integration keeps them browsing my other listings.",
+    text: "I've tried every landing page tool out there and nothing comes close. The load speed alone makes a huge difference. Buyers actually stay on the page. And the MLS integration keeps them browsing my other listings.",
     date: "02/2026",
     image: "/images/reviews/lauren-mitchell.jpg",
   },

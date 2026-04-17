@@ -22,9 +22,9 @@ export default function Ads() {
           </AnimateIn>
           <AnimateIn delay={0.2}>
             <p className="text-muted text-lg mb-8 font-light leading-relaxed">
-              Our targeting algorithm analyzes your listing — price point,
-              location, property type, nearby amenities, lifestyle markers — and
-              builds the audience most likely to act.
+              Our targeting algorithm analyzes your listing: price point,
+              location, property type, nearby amenities, lifestyle markers. Then
+              it builds the audience most likely to act.
             </p>
           </AnimateIn>
           <AnimateIn delay={0.25}>

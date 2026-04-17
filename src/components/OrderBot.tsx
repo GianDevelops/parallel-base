@@ -8,7 +8,7 @@ const SERVICES = [
     name: "Google Ads Campaign",
     price: 325,
     tag: "High Intent",
-    desc: "Search, Display & Performance Max — intercepts buyers actively searching your market.",
+    desc: "Search, Display & Performance Max. Intercepts buyers actively searching your market.",
   },
   {
     id: "meta_ads",
@@ -37,7 +37,7 @@ const SERVICES = [
 const BUNDLE = {
   ids: ["google_ads", "meta_ads", "landing_page"],
   label: "Full Stack Package",
-  tagline: "Best Results — Most agents choose this",
+  tagline: "Best Results · Most agents choose this",
 };
 
 const STEPS = [
@@ -417,7 +417,7 @@ export default function OrderBot() {
                 </strong>
               </div>
               Can&apos;t wait to get your property in front of the right buyers.
-              This takes about 2 minutes — let&apos;s build your campaign.
+              This takes about 2 minutes. Let&apos;s build your campaign.
             </BotBubble>
             <BotBubble delay={1000}>
               Tap{" "}
@@ -526,7 +526,7 @@ export default function OrderBot() {
                 <strong className="text-foreground">
                   3–5× more qualified leads
                 </strong>{" "}
-                than ads alone. The landing page is the conversion engine —
+                than ads alone. The landing page is the conversion engine.
                 without it, ad traffic has nowhere optimized to land.
               </span>
             </BotBubble>
@@ -561,7 +561,7 @@ export default function OrderBot() {
                 </div>
 
                 <div className="text-center text-xs text-muted/40 py-0.5">
-                  — or pick individually —
+                  or pick individually
                 </div>
 
                 {SERVICES.map((s) => (
@@ -591,7 +591,7 @@ export default function OrderBot() {
                     next();
                   }}
                 >
-                  Continue —{" "}
+                  Continue:{" "}
                   {data.services.length > 0
                     ? fmtCur(total)
                     : "Select services"}{" "}
@@ -607,7 +607,7 @@ export default function OrderBot() {
           <>
             <BotBubble>
               <div className="mb-2">
-                <strong className="text-foreground">Quick heads up —</strong>{" "}
+                <strong className="text-foreground">Quick heads up:</strong>{" "}
                 you&apos;re running ads without a dedicated landing page.
               </div>
               <div className="text-[13.5px] leading-snug">
@@ -616,7 +616,7 @@ export default function OrderBot() {
                 <strong className="text-foreground">
                   you lose 70–80% of potential leads
                 </strong>
-                . Our landing pages are engineered to capture those leads —
+                . Our landing pages are engineered to capture those leads:
                 strategic forms, sub-millisecond load times, and direct CRM
                 delivery.
               </div>
@@ -636,11 +636,11 @@ export default function OrderBot() {
                       ...d,
                       services: [...d.services, "landing_page"],
                     }));
-                    addUser("Added Landing Page — $595");
+                    addUser("Added Landing Page +$595");
                     goTo("targeting");
                   }}
                 >
-                  Add Landing Page — $595 →
+                  Add Landing Page +$595 →
                 </PrimaryButton>
                 <SecondaryButton
                   onClick={() => {
@@ -690,7 +690,7 @@ export default function OrderBot() {
         return (
           <>
             <BotBubble>
-              Our algorithm already determines the best placements for your ad —
+              Our algorithm already determines the best placements for your ad:
               optimal geographies, audiences, and websites. But if you have
               specific preferences, add them below.
             </BotBubble>
@@ -843,7 +843,7 @@ export default function OrderBot() {
                 <PrimaryButton onClick={submitOrder} disabled={submitting}>
                   {submitting
                     ? "Placing Order..."
-                    : `Confirm Order — ${fmtCur(total)} →`}
+                    : `Confirm Order: ${fmtCur(total)} →`}
                 </PrimaryButton>
               </div>
             )}

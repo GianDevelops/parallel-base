@@ -9,7 +9,7 @@ const steps = [
   {
     number: "01",
     headline: "Place your order.",
-    body: "Select what you need — landing page, ad campaign, or both — plus any add-ons. Add your property or market details and check out. Takes minutes.",
+    body: "Select what you need: landing page, ad campaign, or both. Add your property or market details and check out. Takes minutes.",
     active: true,
   },
   {

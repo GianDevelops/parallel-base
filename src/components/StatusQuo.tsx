@@ -138,7 +138,7 @@ export default function StatusQuo() {
               <AnimateIn delay={0.2}>
                 <p className="border-l border-light-border pl-6">
                   You get handed a landing page template. You boost a post on
-                  Instagram. You wait. Nothing happens — or worse, you get leads
+                  Instagram. You wait. Nothing happens. Or worse, you get leads
                   that ghost you.
                 </p>
               </AnimateIn>

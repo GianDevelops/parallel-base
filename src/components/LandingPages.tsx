@@ -124,7 +124,7 @@ export default function LandingPages() {
             <p className="text-light-muted text-lg border-l border-light-text pl-6">
               Every Parallel Base landing page is built to turn visitors into
               leads. Strategic lead capture, fast load times, and direct CRM
-              integration — not a template, a system.
+              integration. Not a template. A system.
             </p>
           </AnimateIn>
         </div>
