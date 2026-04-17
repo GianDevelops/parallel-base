@@ -73,7 +73,7 @@ const fmtCur = (n: number) => "$" + n.toLocaleString();
 
 function PBAvatar() {
   return (
-    <div className="w-[34px] h-[34px] flex-shrink-0 bg-background border border-border flex items-center justify-center text-foreground font-black text-[11px] tracking-[0.04em]">
+    <div className="w-[34px] h-[34px] rounded-full flex-shrink-0 bg-accent flex items-center justify-center text-background font-black text-[11px] tracking-[0.04em] shadow-[0_0_12px_rgba(0,229,204,0.2)]">
       PB
     </div>
   );
@@ -105,7 +105,7 @@ function BotBubble({
     return (
       <div className="flex gap-2.5 items-start mb-2.5">
         <PBAvatar />
-        <div className="bg-surface px-5 py-4 border border-border flex gap-1.5 items-center">
+        <div className="bg-surface px-5 py-4 rounded-2xl rounded-tl-sm border border-border/50 flex gap-1.5 items-center">
           {[0, 1, 2].map((i) => (
             <div
               key={i}
@@ -123,7 +123,7 @@ function BotBubble({
       className="flex gap-2.5 items-start mb-2.5 animate-[fadeUp_0.35s_ease]"
     >
       <PBAvatar />
-      <div className="bg-surface text-muted px-4 py-3.5 border border-border max-w-[82%] text-sm leading-relaxed">
+      <div className="bg-surface text-muted px-4 py-3.5 rounded-2xl rounded-tl-sm border border-border/50 max-w-[82%] text-sm leading-relaxed shadow-sm">
         {children}
       </div>
     </div>
@@ -140,7 +140,7 @@ function UserBubble({ children }: { children: ReactNode }) {
       ref={ref}
       className="flex justify-end mb-2.5 animate-[fadeUp_0.25s_ease]"
     >
-      <div className="bg-accent text-background px-4 py-3 max-w-[75%] text-sm leading-snug font-medium">
+      <div className="bg-accent text-background px-4 py-3 rounded-2xl rounded-tr-sm max-w-[75%] text-sm leading-snug font-medium shadow-sm">
         {children}
       </div>
     </div>
@@ -166,7 +166,7 @@ function TextInput({
       placeholder={placeholder}
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      className="w-full px-4 py-3 border border-border bg-background text-foreground text-sm outline-none transition-colors focus:border-accent placeholder:text-muted/50"
+      className="w-full px-4 py-3 border border-border/50 rounded-xl bg-background text-foreground text-sm outline-none transition-all focus:border-accent focus:shadow-[0_0_0_3px_rgba(0,229,204,0.1)] placeholder:text-muted/50"
     />
   );
 }
@@ -184,10 +184,10 @@ function PrimaryButton({
     <button
       onClick={onClick}
       disabled={disabled}
-      className={`w-full px-7 py-3.5 text-sm font-bold tracking-[0.01em] transition-all ${
+      className={`w-full px-7 py-3.5 rounded-xl text-sm font-bold tracking-[0.01em] transition-all ${
         disabled
           ? "bg-surface-light text-muted/40 cursor-not-allowed"
-          : "bg-accent text-background cursor-pointer hover:-translate-y-0.5 hover:shadow-[0_6px_24px_rgba(0,229,204,0.25)]"
+          : "bg-accent text-background cursor-pointer hover:-translate-y-0.5 hover:shadow-[0_8px_28px_rgba(0,229,204,0.3)] active:translate-y-0 active:shadow-none"
       }`}
     >
       {children}
@@ -205,7 +205,7 @@ function SecondaryButton({
   return (
     <button
       onClick={onClick}
-      className="w-full px-5 py-3 border border-border text-muted text-sm cursor-pointer transition-colors hover:border-accent hover:text-accent"
+      className="w-full px-5 py-3 rounded-xl border border-border/50 text-muted text-sm cursor-pointer transition-all hover:border-accent hover:text-accent hover:bg-accent/5"
     >
       {children}
     </button>
@@ -226,10 +226,10 @@ function ServiceCard({
   return (
     <div
       onClick={onToggle}
-      className={`border px-4 py-4 cursor-pointer transition-all relative ${
+      className={`border px-4 py-4 rounded-xl cursor-pointer transition-all relative ${
         selected
-          ? "border-accent bg-accent/10"
-          : "border-border bg-background hover:border-border-light"
+          ? "border-accent bg-accent/10 shadow-[0_0_0_3px_rgba(0,229,204,0.1)]"
+          : "border-border/50 bg-background hover:border-border-light"
       }`}
     >
       <div className="flex justify-between items-start mb-1.5">
@@ -252,7 +252,7 @@ function ServiceCard({
             {fmtCur(service.price)}
           </span>
           <div
-            className={`w-5 h-5 border-2 flex items-center justify-center transition-all ${
+            className={`w-5 h-5 rounded-md border-2 flex items-center justify-center transition-all ${
               selected
                 ? "border-accent bg-accent"
                 : "border-muted/40 bg-transparent"
@@ -268,7 +268,7 @@ function ServiceCard({
       </div>
       <p className="text-[13px] text-muted/70 leading-snug">{service.desc}</p>
       {service.recommended && (
-        <div className="absolute -top-2.5 right-4 bg-accent text-background text-[10px] font-bold px-2.5 py-0.5 tracking-[0.05em] uppercase">
+        <div className="absolute -top-2.5 right-4 bg-accent text-background text-[10px] font-bold px-2.5 py-0.5 rounded-md tracking-[0.05em] uppercase">
           RECOMMENDED
         </div>
       )}
@@ -287,24 +287,42 @@ function TargetingGroup({
   values: string[];
   onChange: (v: string[]) => void;
 }) {
+  const visibleCount = values.filter((_, i) => i === 0 || values[i] !== "" || values.slice(0, i).some((v, j) => j > 0 && v !== "")).length || 1;
+  const [shown, setShown] = useState(1);
+
+  const addRow = () => {
+    if (shown < values.length) setShown(shown + 1);
+  };
+
   return (
     <div>
-      <div className="text-[13px] font-semibold text-foreground mb-0.5">
-        {label}
+      <div className="flex items-center justify-between mb-1.5">
+        <div>
+          <div className="text-[13px] font-semibold text-foreground">{label}</div>
+          <div className="text-[11px] text-muted/50">{sub}</div>
+        </div>
+        {shown < values.length && (
+          <button
+            onClick={addRow}
+            className="w-6 h-6 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center text-accent text-sm font-bold hover:bg-accent/20 transition-colors cursor-pointer"
+          >
+            +
+          </button>
+        )}
       </div>
-      <div className="text-[11.5px] text-muted/50 mb-2">{sub}</div>
       <div className="flex flex-col gap-2">
-        {values.map((v, i) => (
-          <TextInput
-            key={i}
-            placeholder={`${label} ${i + 1} (optional)`}
-            value={v}
-            onChange={(nv) => {
-              const u = [...values];
-              u[i] = nv;
-              onChange(u);
-            }}
-          />
+        {values.slice(0, shown).map((v, i) => (
+          <div key={i} className="animate-[fadeUp_0.25s_ease]">
+            <TextInput
+              placeholder={`${label} ${i + 1} (optional)`}
+              value={v}
+              onChange={(nv) => {
+                const u = [...values];
+                u[i] = nv;
+                onChange(u);
+              }}
+            />
+          </div>
         ))}
       </div>
     </div>
@@ -335,9 +353,9 @@ export default function OrderBot() {
     property: "",
     services: [],
     adDestination: "",
-    geos: ["", "", ""],
-    audiences: ["", "", ""],
-    websites: ["", "", ""],
+    geos: ["", "", "", ""],
+    audiences: ["", "", "", ""],
+    websites: ["", "", "", ""],
     launchDate: "",
   });
   const [msgs, setMsgs] = useState<{ from: string; text: string }[]>([]);
@@ -354,13 +372,24 @@ export default function OrderBot() {
 
   const goTo = (name: string) => {
     const i = STEPS.indexOf(name);
-    if (i >= 0) setStep(i);
+    if (i >= 0) {
+      if (name === "targeting") setMsgs([]);
+      setStep(i);
+    }
   };
 
   const next = () => {
-    if (STEPS[step + 1] === "upsell" && hasLP) setStep(step + 3);
-    else if (STEPS[step + 1] === "destination" && hasLP) setStep(step + 2);
-    else setStep(step + 1);
+    const nextStep = STEPS[step + 1];
+    if (nextStep === "upsell" && hasLP) {
+      setMsgs([]);
+      setStep(step + 3);
+    } else if (nextStep === "destination" && hasLP) {
+      setMsgs([]);
+      setStep(step + 2);
+    } else {
+      if (nextStep === "targeting" || nextStep === "services" || nextStep === "summary") setMsgs([]);
+      setStep(step + 1);
+    }
   };
 
   const addUser = (text: string) =>
@@ -535,11 +564,11 @@ export default function OrderBot() {
                 {/* Bundle option */}
                 <div
                   onClick={selectBundle}
-                  className={`border px-4 py-3.5 cursor-pointer transition-all ${
+                  className={`border px-4 py-3.5 rounded-xl cursor-pointer transition-all ${
                     data.services.length >= 3 &&
                     BUNDLE.ids.every((id) => data.services.includes(id))
-                      ? "border-accent bg-accent/10"
-                      : "border-dashed border-accent/25 bg-accent/10"
+                      ? "border-accent bg-accent/10 shadow-[0_0_0_3px_rgba(0,229,204,0.1)]"
+                      : "border-dashed border-accent/25 bg-accent/5"
                   }`}
                 >
                   <div className="flex justify-between items-center">
@@ -695,7 +724,7 @@ export default function OrderBot() {
               specific preferences, add them below.
             </BotBubble>
             {ready && (
-              <div className={`${inputWrap} !gap-3.5`}>
+              <div className={`${inputWrap} !gap-2.5`}>
                 <TargetingGroup
                   label="Geographies"
                   sub="Cities, zip codes, or neighborhoods"
@@ -757,7 +786,7 @@ export default function OrderBot() {
                   onChange={(e) =>
                     setData((d) => ({ ...d, launchDate: e.target.value }))
                   }
-                  className="w-full px-4 py-3 border border-border bg-background text-foreground text-sm outline-none transition-colors focus:border-accent"
+                  className="w-full px-4 py-3 border border-border/50 rounded-xl bg-background text-foreground text-sm outline-none transition-all focus:border-accent focus:shadow-[0_0_0_3px_rgba(0,229,204,0.1)]"
                 />
                 <PrimaryButton
                   disabled={!data.launchDate}
@@ -777,16 +806,16 @@ export default function OrderBot() {
         return (
           <>
             <BotBubble>
-              <div className="mb-2.5">
+              <div className="mb-2">
                 <strong className="text-[15px] text-foreground">
                   Order Summary
                 </strong>
               </div>
-              <div className="border-t border-border pt-2.5">
-                <div className="text-[11px] text-muted/50 mb-1 tracking-[0.06em] uppercase">
-                  Property
+              <div className="border-t border-border pt-2">
+                <div className="flex justify-between gap-4 mb-1.5 text-xs">
+                  <span className="text-muted/50 uppercase tracking-[0.06em]">Property</span>
+                  <span className="text-muted text-right">{data.property}</span>
                 </div>
-                <div className="text-sm mb-3 text-muted">{data.property}</div>
 
                 <div className="text-[11px] text-muted/50 mb-1 tracking-[0.06em] uppercase">
                   Services
@@ -796,10 +825,10 @@ export default function OrderBot() {
                   return (
                     <div
                       key={id}
-                      className="flex justify-between mb-1 text-sm"
+                      className="flex justify-between gap-4 mb-0.5 text-sm"
                     >
                       <span className="text-muted">{s?.name}</span>
-                      <span className="font-semibold text-foreground">
+                      <span className="font-semibold text-foreground flex-shrink-0">
                         {fmtCur(s?.price || 0)}
                       </span>
                     </div>
@@ -807,24 +836,18 @@ export default function OrderBot() {
                 })}
 
                 {!hasLP && data.adDestination && (
-                  <>
-                    <div className="text-[11px] text-muted/50 mb-1 mt-2 tracking-[0.06em] uppercase">
-                      Ad Destination
-                    </div>
-                    <div className="text-[13px] mb-2 break-all text-muted/70">
-                      {data.adDestination}
-                    </div>
-                  </>
+                  <div className="flex justify-between gap-4 mt-1.5 text-xs">
+                    <span className="text-muted/50 uppercase tracking-[0.06em]">Ad Destination</span>
+                    <span className="text-muted/70 text-right break-all text-[12px]">{data.adDestination}</span>
+                  </div>
                 )}
 
-                <div className="text-[11px] text-muted/50 mb-1 mt-2 tracking-[0.06em] uppercase">
-                  Launch Date
-                </div>
-                <div className="text-sm mb-3 text-muted">
-                  {fmtDate(data.launchDate)}
+                <div className="flex justify-between gap-4 mt-1.5 mb-2 text-xs">
+                  <span className="text-muted/50 uppercase tracking-[0.06em]">Launch</span>
+                  <span className="text-muted">{fmtDate(data.launchDate)}</span>
                 </div>
 
-                <div className="border-t border-border pt-2.5 mt-1.5 flex justify-between items-center">
+                <div className="border-t border-border pt-2 flex justify-between items-center">
                   <span className="font-bold text-base text-foreground">
                     Total
                   </span>
@@ -868,7 +891,7 @@ export default function OrderBot() {
                 <strong className="text-foreground">{data.email}</strong> with
                 your order details, invoice, and next steps.
               </div>
-              <div className="mt-3.5 px-4 py-2.5 bg-accent/10 border border-accent/25 text-[13px] text-accent">
+              <div className="mt-3.5 px-4 py-2.5 rounded-lg bg-accent/10 border border-accent/25 text-[13px] text-accent">
                 Target launch:{" "}
                 <strong>{fmtDate(data.launchDate)}</strong>
               </div>
@@ -879,21 +902,23 @@ export default function OrderBot() {
   }
 
   return (
-    <div className="w-full max-w-[480px] mx-auto h-full bg-[#050505] flex flex-col border-x border-border overflow-hidden">
+    <div className="w-full h-full mx-auto bg-surface/80 backdrop-blur-sm flex flex-col rounded-2xl border border-border/30 overflow-hidden shadow-2xl shadow-black/30 max-w-[800px]">
       {/* Header */}
-      <div className="px-5 py-3.5 border-b border-border flex items-center gap-3 bg-[#080808]">
-        <div className="w-[38px] h-[38px] bg-background border border-border flex items-center justify-center text-foreground font-extrabold text-[13px]">
+      <div className="px-5 py-3.5 border-b border-border/20 flex items-center gap-3 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-accent/[0.03] to-transparent animate-[shimmer_3s_ease_infinite]" />
+        <div className="relative w-[34px] h-[34px] rounded-full bg-accent flex items-center justify-center text-background font-extrabold text-[12px] shadow-[0_0_12px_rgba(0,229,204,0.2)]">
+          <div className="absolute inset-0 rounded-full animate-[pulse-ring_2s_ease_infinite] border border-accent/30" />
           PB
         </div>
-        <div>
-          <div className="font-bold text-[15px] text-foreground">
+        <div className="relative flex-1">
+          <div className="font-bold text-sm text-foreground">
             Parallel Base
           </div>
-          <div className="text-[11.5px] text-muted/50">
-            Campaign Order System
-          </div>
         </div>
-        <div className="ml-auto w-2 h-2 rounded-full bg-accent shadow-[0_0_8px_rgba(0,229,204,0.4)]" />
+        <div className="relative flex items-center gap-1.5">
+          <div className="w-1.5 h-1.5 rounded-full bg-accent shadow-[0_0_6px_rgba(0,229,204,0.4)] animate-pulse" />
+          <span className="text-[10px] text-accent/60 font-medium">Online</span>
+        </div>
       </div>
 
       {/* Chat area */}
@@ -910,18 +935,18 @@ export default function OrderBot() {
       </div>
 
       {/* Progress bar */}
-      <div className="px-5 py-3 border-t border-border bg-[#050505]">
+      <div className="px-5 py-3 border-t border-border/20 rounded-b-2xl">
         <div className="flex justify-between mb-1.5 text-[11px] text-muted/40">
           <span>
             Step {Math.min(step + 1, STEPS.length - 1)} of {STEPS.length - 1}
           </span>
-          <span>
+          <span className="text-accent/60 font-medium">
             {Math.round((step / (STEPS.length - 1)) * 100)}%
           </span>
         </div>
-        <div className="h-[3px] bg-surface overflow-hidden">
+        <div className="h-[3px] bg-surface rounded-full overflow-hidden">
           <div
-            className="h-full bg-accent transition-all duration-500 ease-out"
+            className="h-full bg-accent rounded-full transition-all duration-500 ease-out shadow-[0_0_8px_rgba(0,229,204,0.4)]"
             style={{ width: `${(step / (STEPS.length - 1)) * 100}%` }}
           />
         </div>
