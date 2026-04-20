@@ -192,25 +192,34 @@ export default function LandingPages() {
 
               {/* Image side */}
               <div className="lg:col-span-7">
-                <div
-                  key={current.id + "-img"}
-                  className="tab-animate-in relative"
-                >
+                <div className="relative">
                   {/* Teal corner brackets */}
                   <div className="absolute -top-[1px] -left-[1px] w-5 h-5 border-t-2 border-l-2 border-accent z-20" />
                   <div className="absolute -bottom-[1px] -right-[1px] w-5 h-5 border-b-2 border-r-2 border-accent z-20" />
 
-                  {/* Ink frame */}
+                  {/* Ink frame — all images stacked, toggle visibility for instant swap */}
                   <div className="border border-light-text/80 relative overflow-hidden bg-white">
-                    <Image
-                      src={current.image}
-                      alt={`${current.label} page example`}
-                      width={1200}
-                      height={750}
-                      sizes="(max-width: 1024px) 100vw, 720px"
-                      className="w-full h-auto object-cover object-top block"
-                      priority={activeType === 0}
-                    />
+                    {pageTypes.map((type, i) => (
+                      <div
+                        key={type.id}
+                        className={`${
+                          i === 0 ? "relative" : "absolute inset-0"
+                        } transition-opacity duration-300 ${
+                          i === activeType ? "opacity-100 z-10" : "opacity-0 z-0"
+                        }`}
+                        aria-hidden={i !== activeType}
+                      >
+                        <Image
+                          src={type.image}
+                          alt={`${type.label} page example`}
+                          width={1200}
+                          height={750}
+                          sizes="(max-width: 1024px) 100vw, 720px"
+                          className="w-full h-auto object-cover object-top block"
+                          priority={i === 0}
+                        />
+                      </div>
+                    ))}
                   </div>
 
                   {/* Caption under image */}
