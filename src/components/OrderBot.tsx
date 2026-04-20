@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, ReactNode } from "react";
 import Image from "next/image";
 
-const AVATAR_SRC = "/images/reviews/sarah-kim.jpg";
+const AVATAR_SRC = "/images/reviews/nicole-alvarez.jpg";
 
 const SERVICES = [
   {
