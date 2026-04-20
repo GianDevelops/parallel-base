@@ -83,7 +83,7 @@ export default function Navigation() {
             </Link>
             <Link
               href="/get-started"
-              className="bg-accent text-background px-6 py-2 text-xs font-bold uppercase tracking-[0.15em] hover:bg-white transition-colors"
+              className="bg-accent text-background px-3 py-1.5 md:px-6 md:py-2 text-[10px] md:text-xs font-bold uppercase tracking-[0.1em] md:tracking-[0.15em] hover:bg-white transition-colors whitespace-nowrap"
             >
               Get Started
             </Link>
