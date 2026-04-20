@@ -2,29 +2,28 @@
 
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
-import Link from "next/link";
 
-const features = [
+const stages = [
   {
     number: "01",
-    label: "Landing Pages",
-    stat: "3–5\u00D7",
-    statCaption: "Conversion Delta",
-    desc: "Custom-built pages that turn visitors into leads.",
+    gerund: "Writing",
+    frequency: "Every listing.",
+    title: "Adaptive Pages",
+    desc: "Our models study your listings and generate pages built to convert each one \u2014 not a template with the address swapped in.",
   },
   {
     number: "02",
-    label: "Ad Campaigns",
-    stat: "100%",
-    statCaption: "Data-Driven Targeting",
-    desc: "Google and Meta ads targeted to your property's data.",
+    gerund: "Bidding",
+    frequency: "Every hour.",
+    title: "Live Ad Optimization",
+    desc: "Algorithms adjust your Google and Meta spend continuously, chasing the clicks most likely to become clients.",
   },
   {
     number: "03",
-    label: "CRM Delivery",
-    stat: "<60s",
-    statCaption: "Lead Latency",
-    desc: "Leads flow directly into your CRM in under 60 seconds.",
+    gerund: "Routing",
+    frequency: "Every lead.",
+    title: "Instant Handoff",
+    desc: "Scored, ranked, and in your CRM in under 60 seconds \u2014 with the hottest ones flagged first.",
   },
 ];
 
@@ -39,109 +38,95 @@ export default function StatusQuo() {
       className="relative py-20 md:py-28 border-b border-light-border bg-light-bg overflow-hidden"
     >
       <div className="max-w-screen-2xl mx-auto px-6 md:px-12">
-        {/* Header: title left, subhead + CTA right */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-end mb-16 md:mb-20">
-          <motion.div
+        {/* Header: two-clause narrative headline */}
+        <div className="mb-16 md:mb-24 max-w-5xl">
+          <motion.h2
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6 }}
-            className="lg:col-span-6 relative"
+            className="text-3xl md:text-5xl lg:text-[3.75rem] font-medium tracking-[-0.03em] leading-[1.05]"
           >
-            <div className="absolute -top-6 left-0 w-6 h-[1px] bg-light-text/30" />
-            <h2 className="text-3xl md:text-5xl lg:text-[3.5rem] leading-[1.05] font-medium tracking-[-0.035em] text-light-text">
-              Lead Generation
-              <br className="hidden sm:block" /> on Autopilot
-            </h2>
-          </motion.div>
+            <span className="block text-light-muted">
+              While you&apos;re showing homes,
+            </span>
+            <span className="block mt-2 md:mt-3 md:ml-[8%] text-light-text relative w-fit">
+              we&apos;re building your pipeline.
+              <span className="absolute -right-5 top-1 md:top-2 md:-right-7 flex h-3 w-3 items-center justify-center">
+                <span className="absolute inline-flex h-full w-full bg-accent opacity-50 animate-ping" />
+                <span className="relative inline-flex h-[5px] w-[5px] bg-accent" />
+              </span>
+            </span>
+          </motion.h2>
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6, delay: 0.15 }}
-            className="lg:col-span-6 flex flex-col sm:flex-row lg:justify-end gap-6 sm:gap-10 items-start sm:items-end"
+            className="mt-10 md:mt-12 md:ml-[8%] flex flex-col sm:flex-row sm:items-end gap-6 sm:gap-10 border-l border-accent/40 pl-5 md:pl-7"
           >
-            <p className="text-sm md:text-base text-light-muted leading-relaxed font-light max-w-xs">
-              Use Parallel Base to launch landing pages, run ad campaigns, and
-              capture leads straight into your CRM. All from a single order.
+            <p className="text-base md:text-lg text-light-muted leading-relaxed font-light max-w-md">
+              A self-operating lead engine trained on what actually converts in
+              your market.
             </p>
-            <Link
-              href="/get-started"
+            <a
+              href="#pipeline"
               className="shrink-0 inline-flex items-center justify-center px-7 py-3.5 bg-light-text text-light-bg text-[10px] font-semibold tracking-[0.2em] uppercase border border-light-text hover:bg-transparent hover:text-light-text transition-colors"
             >
-              Get Started
-            </Link>
+              See It Run
+            </a>
           </motion.div>
         </div>
 
-        {/* Capabilities row with traveling pulse */}
-        <div className="relative">
-          {/* Horizontal hairline + animated pulse */}
-          <div className="relative h-[1px] bg-light-border overflow-hidden">
-            {isInView && (
-              <motion.div
-                initial={{ left: "-15%" }}
-                animate={{ left: "110%" }}
-                transition={{
-                  duration: 4,
-                  delay: 0.5,
-                  repeat: Infinity,
-                  ease: "linear",
-                }}
-                className="absolute top-1/2 -translate-y-1/2 h-[1px] w-[180px]"
-                style={{
-                  background:
-                    "linear-gradient(to right, transparent, #00E5CC, transparent)",
-                  boxShadow: "0 0 8px rgba(0, 229, 204, 0.6)",
-                }}
-              />
-            )}
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 pt-10 md:pt-12">
-            {features.map((f, i) => (
-              <motion.article
-                key={f.number}
-                initial={{ opacity: 0, y: 20 }}
-                animate={isInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.5, delay: 0.3 + i * 0.12 }}
-                className={`group relative flex flex-col ${
-                  i > 0
-                    ? "md:border-l md:border-light-border md:pl-8 lg:pl-12"
-                    : ""
-                } ${i > 0 ? "pt-10 md:pt-0" : ""}`}
-              >
-                <div className="flex items-center gap-4 mb-8">
-                  <span className="text-[10px] font-medium tracking-[0.2em] text-light-muted group-hover:text-light-text transition-colors">
-                    {f.number}
+        {/* Stages as cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-6">
+          {stages.map((s, i) => (
+            <motion.article
+              key={s.number}
+              initial={{ opacity: 0, y: 24 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.5, delay: 0.3 + i * 0.12 }}
+              className="group relative bg-white border border-light-border hover:border-light-text transition-colors duration-300 flex flex-col"
+            >
+              {/* Top meta bar: ordinal + live status */}
+              <div className="flex items-center justify-between px-6 md:px-7 pt-6 md:pt-7 pb-5 border-b border-light-border">
+                <div className="flex items-center gap-3">
+                  <span className="inline-flex items-center justify-center bg-light-text text-light-bg text-[10px] font-semibold tracking-[0.15em] px-1.5 py-0.5">
+                    {s.number}
                   </span>
-                  <div className="w-6 h-[1px] bg-light-border group-hover:bg-light-text/40 transition-colors" />
-                  <h3 className="text-[10px] uppercase tracking-[0.2em] font-semibold text-light-text">
-                    {f.label}
-                  </h3>
+                  <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-light-muted">
+                    {s.gerund} · {s.frequency.replace(".", "")}
+                  </span>
                 </div>
+                <span className="relative flex h-2 w-2 items-center justify-center" aria-label="Live">
+                  <span className="absolute inline-flex h-full w-full bg-accent opacity-50 animate-ping" />
+                  <span className="relative inline-flex h-[4px] w-[4px] bg-accent" />
+                </span>
+              </div>
 
-                {/* Stat display */}
-                <div className="mb-6">
-                  <div className="flex items-baseline gap-2">
-                    <div
-                      className="text-light-text font-medium tracking-[-0.04em] leading-none"
-                      style={{ fontSize: "clamp(2.75rem, 5vw, 4rem)" }}
-                    >
-                      {f.stat}
-                    </div>
-                    <div className="w-1.5 h-1.5 bg-accent translate-y-[-2px]" />
-                  </div>
-                  <div className="mt-3 text-[10px] uppercase tracking-[0.2em] font-semibold text-light-muted">
-                    {f.statCaption}
-                  </div>
-                </div>
+              {/* Title — hero, with running counter indicator */}
+              <div className="px-6 md:px-7 pt-8 md:pt-10 flex-1 flex flex-col">
+                <h3 className="font-medium tracking-[-0.02em] leading-[1.05] text-light-text text-3xl md:text-[2rem] lg:text-[2.25rem] xl:text-4xl max-w-[14ch]">
+                  {s.title}
+                </h3>
 
-                <p className="text-[15px] leading-[1.65] text-light-muted font-light max-w-[280px]">
-                  {f.desc}
+                <p className="mt-5 md:mt-6 text-[14px] md:text-[15px] font-light text-light-muted leading-relaxed">
+                  {s.desc}
                 </p>
-              </motion.article>
-            ))}
-          </div>
+
+                {/* Bottom rule with teal tick */}
+                <div className="mt-auto pt-8 md:pt-10 pb-6 md:pb-7 flex items-center gap-3">
+                  <span className="w-6 h-[1px] bg-accent" />
+                  <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-light-muted">
+                    Running
+                  </span>
+                </div>
+              </div>
+
+              {/* Accent corner bracket on hover */}
+              <span className="absolute top-0 right-0 w-3 h-[1px] bg-accent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <span className="absolute top-0 right-0 w-[1px] h-3 bg-accent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            </motion.article>
+          ))}
         </div>
       </div>
 

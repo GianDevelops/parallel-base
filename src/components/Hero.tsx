@@ -53,7 +53,7 @@ export default function Hero() {
               className="flex flex-col sm:flex-row items-start sm:items-center gap-6"
             >
               <a
-                href="#why"
+                href="#pipeline"
                 className="bg-accent text-background px-8 py-4 text-sm font-bold uppercase tracking-[0.15em] hover:bg-white transition-colors inline-flex items-center"
               >
                 See How It Works

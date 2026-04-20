@@ -39,7 +39,7 @@ export default function Integration() {
   return (
     <section
       id="pipeline"
-      className="py-32 md:py-48 border-b border-border bg-background relative overflow-hidden flex flex-col justify-center"
+      className="py-32 md:py-48 border-b border-border bg-background relative overflow-hidden flex flex-col justify-center scroll-mt-20"
       ref={ref}
     >
       {/* Background glow */}
