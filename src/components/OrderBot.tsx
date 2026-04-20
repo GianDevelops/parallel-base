@@ -1,6 +1,9 @@
 "use client";
 
 import { useState, useEffect, useRef, ReactNode } from "react";
+import Image from "next/image";
+
+const AVATAR_SRC = "/images/reviews/sarah-kim.jpg";
 
 const SERVICES = [
   {
@@ -76,8 +79,14 @@ const fmtCur = (n: number) => "$" + n.toLocaleString();
 
 function PBAvatar() {
   return (
-    <div className="w-[34px] h-[34px] rounded-full flex-shrink-0 bg-accent flex items-center justify-center text-background font-black text-[11px] tracking-[0.04em] shadow-[0_0_12px_rgba(0,229,204,0.2)]">
-      PB
+    <div className="relative w-[34px] h-[34px] rounded-full flex-shrink-0 overflow-hidden border border-accent/40 shadow-[0_0_12px_rgba(0,229,204,0.2)]">
+      <Image
+        src={AVATAR_SRC}
+        alt="Parallel Base assistant"
+        fill
+        sizes="34px"
+        className="object-cover"
+      />
     </div>
   );
 }
@@ -1045,9 +1054,15 @@ export default function OrderBot() {
       {/* Header */}
       <div className="px-5 py-3.5 border-b border-border/20 flex items-center gap-3 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-accent/[0.03] to-transparent animate-[shimmer_3s_ease_infinite]" />
-        <div className="relative w-[34px] h-[34px] rounded-full bg-accent flex items-center justify-center text-background font-extrabold text-[12px] shadow-[0_0_12px_rgba(0,229,204,0.2)]">
-          <div className="absolute inset-0 rounded-full animate-[pulse-ring_2s_ease_infinite] border border-accent/30" />
-          PB
+        <div className="relative w-[34px] h-[34px] rounded-full overflow-hidden border border-accent/40 shadow-[0_0_12px_rgba(0,229,204,0.2)]">
+          <div className="absolute -inset-[2px] rounded-full animate-[pulse-ring_2s_ease_infinite] border border-accent/30 z-10 pointer-events-none" />
+          <Image
+            src={AVATAR_SRC}
+            alt="Parallel Base assistant"
+            fill
+            sizes="34px"
+            className="object-cover"
+          />
         </div>
         <div className="relative flex-1">
           <div className="font-bold text-sm text-foreground">

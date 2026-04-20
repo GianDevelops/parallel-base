@@ -25,15 +25,15 @@ export default function GetStarted() {
       {/* Nav */}
       <nav className="relative z-50 border-b border-border/30">
         <div className="max-w-[1400px] mx-auto px-6 md:px-10 flex items-center justify-between h-16 md:h-20">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-accent rounded-lg flex items-center justify-center">
-              <span className="text-background font-black text-xs tracking-tighter leading-none">
-                PB
-              </span>
-            </div>
-            <span className="text-foreground font-bold text-lg tracking-tight">
-              Parallel Base
-            </span>
+          <Link href="/" className="group transition-transform hover:scale-[1.02]">
+            <Image
+              src="/logo.png"
+              alt="Parallel Base"
+              width={590}
+              height={100}
+              priority
+              className="h-7 md:h-8 w-auto"
+            />
           </Link>
           <Link
             href="/"
