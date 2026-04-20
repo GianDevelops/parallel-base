@@ -81,12 +81,15 @@ export default function LandingPages() {
   }, []);
 
   return (
-    <section id="pages" className="py-24 md:py-32 border-b border-light-border bg-light-bg overflow-hidden relative">
+    <section
+      id="pages"
+      className="py-24 md:py-32 border-b border-light-border bg-light-bg overflow-hidden relative"
+    >
       <div className="max-w-screen-2xl mx-auto px-6 md:px-12">
         {/* Header */}
         <div className="mb-20 max-w-3xl">
           <AnimateIn>
-            <span className="text-xs font-semibold tracking-[0.2em] text-background uppercase block mb-4">
+            <span className="text-[10px] font-semibold tracking-[0.2em] text-light-text uppercase block mb-4">
               Landing Pages
             </span>
           </AnimateIn>
@@ -96,7 +99,7 @@ export default function LandingPages() {
             </h3>
           </AnimateIn>
           <AnimateIn delay={0.15}>
-            <p className="text-light-muted text-lg border-l border-light-text pl-6">
+            <p className="text-light-muted text-lg border-l border-light-text pl-6 font-light">
               Every Parallel Base landing page is built to turn visitors into
               leads. Strategic lead capture, fast load times, and direct CRM
               integration. Not a template. A system.
@@ -105,104 +108,117 @@ export default function LandingPages() {
         </div>
 
         {/* Features Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-y-10 gap-x-8 mb-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-y-10 gap-x-8 mb-20 md:mb-24">
           {features.map((f, i) => (
-              <AnimateIn key={f.title} delay={0.05 * i}>
-                <div className="hover-border-accent-dark border-t border-light-border pt-6 group">
-                  <h5 className="text-light-text font-medium mb-2">
-                    {f.title}
-                  </h5>
-                  <p className="text-sm text-light-muted font-light">{f.desc}</p>
-                </div>
-              </AnimateIn>
+            <AnimateIn key={f.title} delay={0.05 * i}>
+              <div className="hover-border-accent-dark border-t border-light-border pt-6 group">
+                <h5 className="text-light-text font-medium mb-2">{f.title}</h5>
+                <p className="text-sm text-light-muted font-light">{f.desc}</p>
+              </div>
+            </AnimateIn>
           ))}
         </div>
 
-        {/* Tabbed Interface — V2: Card stack with depth */}
+        {/* Tabbed Interface — editorial hairline style */}
         <AnimateIn>
-          <div className="border border-border bg-background p-2 max-w-5xl mx-auto">
-            {/* Tab Headers */}
-            <div className="flex flex-col sm:flex-row border-b border-border bg-surface">
-              {pageTypes.map((type, i) => (
-                <button
-                  key={type.id}
-                  onClick={() => handleTab(i)}
-                  className={`flex-1 py-4 px-6 text-left text-sm tracking-wide uppercase font-semibold transition-all ${
-                    i > 0 ? "border-l border-border" : ""
-                  } ${
-                    activeType === i
-                      ? "text-foreground bg-surface-light"
-                      : "text-muted hover:text-foreground"
-                  }`}
-                >
-                  <span
-                    className={`mr-2 ${
-                      activeType === i ? "text-accent" : "opacity-50"
-                    }`}
+          <div className="max-w-6xl mx-auto">
+            {/* Tab headers: numbered hairline labels */}
+            <div className="grid grid-cols-3 border-t border-light-border">
+              {pageTypes.map((type, i) => {
+                const isActive = activeType === i;
+                return (
+                  <button
+                    key={type.id}
+                    onClick={() => handleTab(i)}
+                    className="relative group text-left py-5 px-1 md:px-2 transition-colors"
                   >
-                    {type.num}.
-                  </span>
-                  {type.label}
-                </button>
-              ))}
+                    {/* Active underline */}
+                    <div
+                      className={`absolute top-0 left-0 right-0 h-[2px] transition-all ${
+                        isActive ? "bg-accent" : "bg-transparent"
+                      }`}
+                    />
+                    <div className="flex items-center gap-3 md:gap-4">
+                      <span
+                        className={`text-[10px] font-medium tracking-[0.2em] transition-colors ${
+                          isActive ? "text-accent" : "text-light-muted"
+                        }`}
+                      >
+                        {type.num}
+                      </span>
+                      <div
+                        className={`hidden sm:block w-6 h-[1px] transition-colors ${
+                          isActive ? "bg-accent" : "bg-light-border"
+                        }`}
+                      />
+                      <span
+                        className={`text-xs md:text-sm font-semibold tracking-[0.2em] uppercase transition-colors ${
+                          isActive
+                            ? "text-light-text"
+                            : "text-light-muted group-hover:text-light-text"
+                        }`}
+                      >
+                        {type.label}
+                      </span>
+                    </div>
+                  </button>
+                );
+              })}
             </div>
 
-            {/* Tab Content — Card stack with depth */}
-            <div className="p-8 md:p-14 bg-background min-h-[420px] relative overflow-hidden flex flex-col lg:flex-row gap-8 lg:gap-12 items-center">
+            {/* Content: asymmetric split on light bg */}
+            <div className="border-t border-light-border pt-12 md:pt-16 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start relative">
+              {/* Index marker */}
+              <div className="hidden lg:block absolute top-6 right-0 font-mono text-[10px] tracking-[0.2em] uppercase text-light-muted">
+                {current.num} / {String(pageTypes.length).padStart(2, "0")}
+              </div>
+
               {/* Text side */}
               <div
                 key={current.id + "-text"}
-                className="relative z-10 lg:w-[45%] pt-4 tab-animate-in"
+                className="lg:col-span-5 tab-animate-in"
               >
-                <h4 className="text-3xl font-medium text-foreground mb-6">
+                <span className="text-[10px] font-semibold tracking-[0.2em] text-accent uppercase block mb-5">
+                  {current.label} Pages
+                </span>
+                <h4 className="text-3xl md:text-4xl font-medium text-light-text leading-[1.1] tracking-[-0.02em] mb-6">
                   {current.headline}
                 </h4>
-                <p className="text-muted leading-relaxed font-light">
+                <p className="text-light-muted leading-relaxed font-light max-w-md">
                   {current.body}
                 </p>
+                <div className="mt-8 w-12 h-[2px] bg-accent" />
               </div>
 
-              {/* Rotated floating card image */}
-              <div className="hidden lg:flex lg:w-[55%] justify-center items-center py-4">
+              {/* Image side */}
+              <div className="lg:col-span-7">
                 <div
-                  key={current.id}
+                  key={current.id + "-img"}
                   className="tab-animate-in relative"
-                  style={{
-                    transform: "rotate(2.5deg)",
-                    transformOrigin: "center center",
-                  }}
                 >
-                  {/* Shadow layer underneath for depth */}
-                  <div
-                    className="absolute inset-0 bg-black/40 blur-xl"
-                    style={{
-                      transform: "translate(8px, 12px)",
-                    }}
-                  />
-                  {/* Card frame */}
-                  <div className="relative border border-[#333] bg-[#1A1A1A] p-1.5">
+                  {/* Teal corner brackets */}
+                  <div className="absolute -top-[1px] -left-[1px] w-5 h-5 border-t-2 border-l-2 border-accent z-20" />
+                  <div className="absolute -bottom-[1px] -right-[1px] w-5 h-5 border-b-2 border-r-2 border-accent z-20" />
+
+                  {/* Ink frame */}
+                  <div className="border border-light-text/80 relative overflow-hidden bg-white">
                     <Image
                       src={current.image}
                       alt={`${current.label} page example`}
-                      width={520}
-                      height={380}
-                      sizes="520px"
-                      className="w-full h-auto object-cover object-top"
+                      width={1200}
+                      height={750}
+                      sizes="(max-width: 1024px) 100vw, 720px"
+                      className="w-full h-auto object-cover object-top block"
+                      priority={activeType === 0}
                     />
                   </div>
-                </div>
-              </div>
 
-              {/* Mobile image (no rotation) */}
-              <div className="lg:hidden mt-6 border border-border overflow-hidden">
-                <Image
-                  src={current.image}
-                  alt={`${current.label} page example`}
-                  width={600}
-                  height={400}
-                  sizes="(max-width: 1024px) 100vw, 0px"
-                  className="w-full h-auto object-cover"
-                />
+                  {/* Caption under image */}
+                  <div className="flex items-center justify-between mt-3 font-mono text-[10px] tracking-[0.2em] uppercase text-light-muted">
+                    <span>FIG. {current.num}</span>
+                    <span>{current.label.toUpperCase()} — LIVE EXAMPLE</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
