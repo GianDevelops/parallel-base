@@ -48,10 +48,13 @@ const STEPS = [
   "upsell",
   "destination",
   "targeting",
+  "creative",
   "launch",
   "summary",
   "confirmation",
 ];
+
+const CREATIVE_PRICE = 15;
 
 const minDate = () => {
   const d = new Date();
@@ -341,6 +344,7 @@ interface OrderData {
   geos: string[];
   audiences: string[];
   websites: string[];
+  creativeOption: "" | "own" | "provide";
   launchDate: string;
 }
 
@@ -356,6 +360,7 @@ export default function OrderBot() {
     geos: ["", "", "", ""],
     audiences: ["", "", "", ""],
     websites: ["", "", "", ""],
+    creativeOption: "",
     launchDate: "",
   });
   const [msgs, setMsgs] = useState<{ from: string; text: string }[]>([]);
@@ -365,10 +370,17 @@ export default function OrderBot() {
 
   const cur = STEPS[step];
   const hasLP = data.services.includes("landing_page");
-  const total = data.services.reduce(
+  const hasGoogle = data.services.includes("google_ads");
+  const hasMeta = data.services.includes("meta_ads");
+  const hasAds = hasGoogle || hasMeta;
+  const adPlatformCount = [hasGoogle, hasMeta].filter(Boolean).length;
+  const creativeCost =
+    data.creativeOption === "provide" ? adPlatformCount * CREATIVE_PRICE : 0;
+  const servicesSubtotal = data.services.reduce(
     (s, id) => s + (SERVICES.find((x) => x.id === id)?.price || 0),
     0
   );
+  const total = servicesSubtotal + creativeCost;
 
   const goTo = (name: string) => {
     const i = STEPS.indexOf(name);
@@ -386,8 +398,18 @@ export default function OrderBot() {
     } else if (nextStep === "destination" && hasLP) {
       setMsgs([]);
       setStep(step + 2);
+    } else if (nextStep === "creative" && !hasAds) {
+      setMsgs([]);
+      setStep(step + 2);
     } else {
-      if (nextStep === "targeting" || nextStep === "services" || nextStep === "summary") setMsgs([]);
+      if (
+        nextStep === "targeting" ||
+        nextStep === "services" ||
+        nextStep === "creative" ||
+        nextStep === "launch" ||
+        nextStep === "summary"
+      )
+        setMsgs([]);
       setStep(step + 1);
     }
   };
@@ -404,6 +426,7 @@ export default function OrderBot() {
         body: JSON.stringify({
           ...data,
           total,
+          creativeCost,
           services_detail: data.services.map((id) => {
             const s = SERVICES.find((x) => x.id === id);
             return { name: s?.name, price: s?.price };
@@ -769,6 +792,111 @@ export default function OrderBot() {
           </>
         );
 
+      case "creative":
+        return (
+          <>
+            <BotBubble>
+              Last thing on the ads — do you have your own ad creative, or
+              should we build it for you?
+            </BotBubble>
+            {!data.creativeOption && ready && (
+              <div className={inputWrap}>
+                <SecondaryButton
+                  onClick={() => {
+                    setData((d) => ({ ...d, creativeOption: "own" }));
+                    addUser("I'll provide my own creative");
+                  }}
+                >
+                  I have my own creative →
+                </SecondaryButton>
+                <PrimaryButton
+                  onClick={() => {
+                    setData((d) => ({ ...d, creativeOption: "provide" }));
+                    addUser(
+                      `Build creative for me (+${fmtCur(
+                        adPlatformCount * CREATIVE_PRICE
+                      )})`
+                    );
+                  }}
+                >
+                  Build creative for me (+
+                  {fmtCur(adPlatformCount * CREATIVE_PRICE)}) →
+                </PrimaryButton>
+              </div>
+            )}
+            {data.creativeOption === "own" && (
+              <>
+                <BotBubble delay={400}>
+                  <div className="mb-2">
+                    <strong className="text-foreground">
+                      Send these after we email your invoice:
+                    </strong>
+                  </div>
+                  <div className="text-[13.5px] leading-relaxed space-y-2">
+                    {hasGoogle && (
+                      <div>
+                        <div className="text-accent text-[11px] font-bold tracking-[0.08em] uppercase mb-1">
+                          Google Ads
+                        </div>
+                        <div className="text-muted">
+                          Images: 1200×628, 1080×1080, 300×600 (JPG/PNG, &lt;150KB each)
+                          <br />
+                          Copy: 5× headlines (≤30 chars), 3× descriptions (≤90 chars)
+                        </div>
+                      </div>
+                    )}
+                    {hasMeta && (
+                      <div>
+                        <div className="text-accent text-[11px] font-bold tracking-[0.08em] uppercase mb-1">
+                          Meta Ads
+                        </div>
+                        <div className="text-muted">
+                          Images/Video: 1080×1080 (feed), 1080×1920 (story/reel), 1200×628 (link)
+                          <br />
+                          Copy: 5× primary text, 3× headlines
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                  <div className="mt-3 text-[13px] text-muted">
+                    Email to{" "}
+                    <strong className="text-foreground">
+                      creative@parallelbase.io
+                    </strong>{" "}
+                    after we send your invoice.
+                  </div>
+                </BotBubble>
+                {ready && (
+                  <div className={inputWrap}>
+                    <PrimaryButton onClick={next}>Continue →</PrimaryButton>
+                  </div>
+                )}
+              </>
+            )}
+            {data.creativeOption === "provide" && (
+              <>
+                <BotBubble delay={400}>
+                  Got it. We&apos;ll design creative tailored to your property
+                  for{" "}
+                  <strong className="text-foreground">
+                    {adPlatformCount === 2 ? "both platforms" : "your ad platform"}
+                  </strong>
+                  . Added{" "}
+                  <strong className="text-foreground">
+                    {fmtCur(adPlatformCount * CREATIVE_PRICE)}
+                  </strong>{" "}
+                  to your total.
+                </BotBubble>
+                {ready && (
+                  <div className={inputWrap}>
+                    <PrimaryButton onClick={next}>Continue →</PrimaryButton>
+                  </div>
+                )}
+              </>
+            )}
+          </>
+        );
+
       case "launch":
         return (
           <>
@@ -834,6 +962,17 @@ export default function OrderBot() {
                     </div>
                   );
                 })}
+                {data.creativeOption === "provide" && (
+                  <div className="flex justify-between gap-4 mb-0.5 text-sm">
+                    <span className="text-muted">
+                      Ad Creative ({adPlatformCount}× platform
+                      {adPlatformCount > 1 ? "s" : ""})
+                    </span>
+                    <span className="font-semibold text-foreground flex-shrink-0">
+                      {fmtCur(adPlatformCount * CREATIVE_PRICE)}
+                    </span>
+                  </div>
+                )}
 
                 {!hasLP && data.adDestination && (
                   <div className="flex justify-between gap-4 mt-1.5 text-xs">
