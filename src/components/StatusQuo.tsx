@@ -50,7 +50,7 @@ export default function StatusQuo() {
             <div className="absolute -top-6 left-0 w-6 h-[1px] bg-light-text/30" />
             <h2 className="text-3xl md:text-5xl lg:text-[3.5rem] leading-[1.05] font-medium tracking-[-0.035em] text-light-text">
               Lead Generation
-              <br className="hidden sm:block" /> Autopilot
+              <br className="hidden sm:block" /> on Autopilot
             </h2>
           </motion.div>
 
