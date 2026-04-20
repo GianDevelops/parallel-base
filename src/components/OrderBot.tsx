@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, ReactNode } from "react";
 import Image from "next/image";
 
-const AVATAR_SRC = "/images/reviews/nicole-alvarez.jpg";
+const AVATAR_SRC = "/images/bot/avatar.jpg";
 
 const SERVICES = [
   {
@@ -85,7 +85,7 @@ function PBAvatar() {
         alt="Parallel Base assistant"
         fill
         sizes="34px"
-        className="object-cover"
+        className="object-cover object-[50%_25%]"
       />
     </div>
   );
