@@ -11,9 +11,9 @@ export default function Hero() {
       {/* Abstract BG */}
       <div className="absolute inset-0 bg-grid-mesh pointer-events-none opacity-40 z-0" />
 
-      {/* Accent glows */}
-      <div className="absolute top-1/4 left-1/4 w-[300px] h-[300px] bg-accent/15 rounded-full blur-[40px] pointer-events-none opacity-50 z-0" />
-      <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-accent/10 rounded-full blur-[40px] pointer-events-none opacity-30 z-0" />
+      {/* Accent glows — reduced blur radius on mobile for perf */}
+      <div className="absolute top-1/4 left-1/4 w-[300px] h-[300px] bg-accent/15 rounded-full blur-[20px] md:blur-[40px] pointer-events-none opacity-50 z-0" />
+      <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-accent/10 rounded-full blur-[20px] md:blur-[40px] pointer-events-none opacity-30 z-0" />
 
       <div className="max-w-screen-2xl mx-auto px-6 md:px-12 relative z-10 w-full pt-10">
         <div className="grid lg:grid-cols-12 gap-10 lg:gap-8 items-center">
@@ -79,7 +79,7 @@ export default function Hero() {
             <div className="absolute inset-0 -m-16 md:-m-24 pointer-events-none">
               {/* Warm glow — left */}
               <div
-                className="absolute top-1/2 left-0 -translate-y-1/2 w-[70%] h-[90%] rounded-full blur-[80px] opacity-70"
+                className="absolute top-1/2 left-0 -translate-y-1/2 w-[70%] h-[90%] rounded-full blur-[40px] md:blur-[80px] opacity-70"
                 style={{
                   background:
                     "radial-gradient(circle, rgba(255, 170, 90, 0.45) 0%, rgba(255, 120, 60, 0.15) 40%, transparent 70%)",
@@ -87,7 +87,7 @@ export default function Hero() {
               />
               {/* Teal glow — right */}
               <div
-                className="absolute top-1/2 right-0 -translate-y-1/2 w-[70%] h-[90%] rounded-full blur-[80px] opacity-80"
+                className="absolute top-1/2 right-0 -translate-y-1/2 w-[70%] h-[90%] rounded-full blur-[40px] md:blur-[80px] opacity-80"
                 style={{
                   background:
                     "radial-gradient(circle, rgba(0, 229, 204, 0.45) 0%, rgba(0, 180, 220, 0.15) 40%, transparent 70%)",

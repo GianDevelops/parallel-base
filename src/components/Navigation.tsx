@@ -39,7 +39,7 @@ export default function Navigation() {
       <nav
         className={`fixed top-0 w-full z-50 transition-all duration-300 border-b py-4 ${
           scrolled
-            ? "bg-background/90 backdrop-blur-md border-border"
+            ? "bg-background/95 md:bg-background/90 md:backdrop-blur-md border-border"
             : "bg-transparent border-transparent"
         }`}
       >
@@ -117,7 +117,7 @@ export default function Navigation() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="fixed inset-0 z-40 bg-background/98 backdrop-blur-xl md:hidden flex flex-col pt-24"
+            className="fixed inset-0 z-40 bg-background md:hidden flex flex-col pt-24"
           >
             <div className="flex flex-col items-start px-8 gap-6 pt-8">
               {navLinks.map((link, i) => (

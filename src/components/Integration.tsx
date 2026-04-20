@@ -43,7 +43,7 @@ export default function Integration() {
       ref={ref}
     >
       {/* Background glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-accent/10 blur-[120px] rounded-full pointer-events-none z-0" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-accent/10 blur-[60px] md:blur-[120px] rounded-full pointer-events-none z-0" />
       <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background z-0" />
 
       {/* Header */}
