@@ -49,17 +49,7 @@ export default function AdShowcase() {
         <div className="absolute left-0 top-0 bottom-0 w-24 md:w-40 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
         <div className="absolute right-0 top-0 bottom-0 w-24 md:w-40 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
 
-        <motion.div
-          className="flex gap-5 w-max"
-          animate={{ x: ["0%", "-50%"] }}
-          transition={{
-            x: {
-              duration: 35,
-              repeat: Infinity,
-              ease: "linear",
-            },
-          }}
-        >
+        <div className="flex gap-5 w-max marquee-track">
           {allAds.map((ad, i) => (
             <div
               key={`${ad.src}-${i}`}
@@ -71,6 +61,7 @@ export default function AdShowcase() {
                   alt={ad.alt}
                   width={400}
                   height={300}
+                  sizes="(max-width: 768px) 320px, 400px"
                   className="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-[1.03]"
                 />
                 {/* Hover overlay */}
@@ -78,7 +69,7 @@ export default function AdShowcase() {
               </div>
             </div>
           ))}
-        </motion.div>
+        </div>
       </div>
     </section>
   );
