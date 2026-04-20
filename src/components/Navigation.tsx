@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 import { Lightning } from "@phosphor-icons/react";
 
 const navLinks = [
@@ -44,13 +45,18 @@ export default function Navigation() {
       >
         <div className="max-w-screen-2xl mx-auto px-6 md:px-12 flex justify-between items-center">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-3 group">
-            <div className="w-8 h-8 bg-accent text-background flex items-center justify-center font-bold text-sm tracking-tighter transition-transform group-hover:scale-105">
-              PB
-            </div>
-            <span className="font-semibold text-foreground tracking-wide uppercase text-sm hidden sm:block">
-              Parallel Base
-            </span>
+          <Link
+            href="/"
+            className="group transition-transform hover:scale-[1.02]"
+          >
+            <Image
+              src="/logo.png"
+              alt="Parallel Base"
+              width={590}
+              height={100}
+              priority
+              className="h-7 md:h-8 w-auto"
+            />
           </Link>
 
           {/* Desktop Links */}

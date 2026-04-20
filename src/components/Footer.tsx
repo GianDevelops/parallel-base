@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 const engineLinks = [
   { label: "Listing Pages", href: "#pages" },
@@ -34,13 +35,14 @@ export default function Footer() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
             {/* Col 1: Logo + description */}
             <div className="md:col-span-2">
-              <Link href="/" className="flex items-center gap-3 mb-6 inline-flex">
-                <div className="w-8 h-8 bg-accent text-background flex items-center justify-center font-bold text-sm tracking-tighter">
-                  PB
-                </div>
-                <span className="font-semibold text-foreground tracking-wide uppercase text-sm">
-                  Parallel Base
-                </span>
+              <Link href="/" className="inline-block mb-6">
+                <Image
+                  src="/logo.png"
+                  alt="Parallel Base"
+                  width={590}
+                  height={100}
+                  className="h-8 w-auto"
+                />
               </Link>
               <p className="text-muted text-sm font-light max-w-sm mb-8 leading-relaxed">
                 High-performance landing pages and precision-targeted ad
