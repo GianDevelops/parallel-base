@@ -11,6 +11,7 @@ const navLinks = [
   { label: "Pages", href: "#pages" },
   { label: "Ads", href: "#ads" },
   { label: "Engine", href: "#pipeline", icon: true },
+  { label: "Studio", href: "/studio", external: true, badge: "SOON" },
 ];
 
 export default function Navigation() {
@@ -65,10 +66,15 @@ export default function Navigation() {
               <a
                 key={link.href}
                 href={link.href}
-                className="hover:text-accent transition-colors uppercase text-xs tracking-[0.15em] text-muted font-medium flex items-center gap-1"
+                className="hover:text-accent transition-colors uppercase text-xs tracking-[0.15em] text-muted font-medium flex items-center gap-1.5"
               >
                 {link.icon && <Lightning weight="fill" className="text-accent w-3 h-3" />}
                 {link.label}
+                {link.badge && (
+                  <span className="text-[8px] tracking-[0.15em] text-accent border border-accent/40 px-1 py-[1px] font-bold leading-none">
+                    {link.badge}
+                  </span>
+                )}
               </a>
             ))}
           </div>
@@ -128,9 +134,14 @@ export default function Navigation() {
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: i * 0.05, duration: 0.3 }}
-                  className="text-2xl font-medium text-foreground tracking-tight uppercase"
+                  className="text-2xl font-medium text-foreground tracking-tight uppercase flex items-center gap-2"
                 >
                   {link.label}
+                  {link.badge && (
+                    <span className="text-[10px] tracking-[0.15em] text-accent border border-accent/40 px-1.5 py-[2px] font-bold leading-none">
+                      {link.badge}
+                    </span>
+                  )}
                 </motion.a>
               ))}
               <motion.div
