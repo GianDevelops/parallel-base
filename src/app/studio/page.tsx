@@ -131,23 +131,15 @@ export default function StudioPage() {
             </div>
 
             <div className="relative">
-              {/* Teal corner brackets */}
-              <div className="absolute -top-[1px] -left-[1px] w-5 h-5 border-t-2 border-l-2 border-accent z-20" />
-              <div className="absolute -top-[1px] -right-[1px] w-5 h-5 border-t-2 border-r-2 border-accent z-20" />
-              <div className="absolute -bottom-[1px] -left-[1px] w-5 h-5 border-b-2 border-l-2 border-accent z-20" />
-              <div className="absolute -bottom-[1px] -right-[1px] w-5 h-5 border-b-2 border-r-2 border-accent z-20" />
-
-              <div className="border border-border bg-surface relative overflow-hidden">
-                <Image
-                  src="/images/studio/dashboard.webp"
-                  alt="Parallel Studio dashboard preview"
-                  width={1920}
-                  height={1080}
-                  priority
-                  sizes="(max-width: 1024px) 100vw, 1280px"
-                  className="w-full h-auto block"
-                />
-              </div>
+              <Image
+                src="/images/studio/dashboard.png"
+                alt="Parallel Studio dashboard shown on a laptop"
+                width={1920}
+                height={1080}
+                priority
+                sizes="(max-width: 1024px) 100vw, 1280px"
+                className="w-full h-auto block"
+              />
 
               <div className="mt-3 flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.2em] text-muted/60">
                 <span>Concept render — final UI may vary</span>
