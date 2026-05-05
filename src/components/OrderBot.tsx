@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, ReactNode } from "react";
 import Image from "next/image";
+import StripePayment from "./StripePayment";
 
 const AVATAR_SRC = "/images/bot/avatar.jpg";
 
@@ -78,6 +79,7 @@ const STEPS = [
   "domain",
   "launch",
   "summary",
+  "payment",
   "confirmation",
 ];
 
@@ -504,7 +506,7 @@ export default function OrderBot() {
   const addUser = (text: string) =>
     setMsgs((p) => [...p, { from: "user", text }]);
 
-  const submitOrder = async () => {
+  const submitOrder = async (paid: boolean) => {
     setSubmitting(true);
     try {
       await fetch("/api/order", {
@@ -528,14 +530,42 @@ export default function OrderBot() {
           existingDomain: data.existingDomain,
           domainOptions: data.domainOptions.filter((v) => v.trim()),
           launchDateFormatted: data.launchDate ? fmtDate(data.launchDate) : "",
+          paymentStatus: paid ? "paid" : "pending",
         }),
       });
-    } catch (e) {
+    } catch {
       // Silently continue — order still shows as confirmed in UI
     }
     setSubmitting(false);
-    addUser("Order confirmed");
+    addUser(paid ? "Payment successful" : "Order placed");
     goTo("confirmation");
+  };
+
+  // Build line items in the shape the /api/checkout route expects
+  const buildLineItems = () => {
+    const items: { name: string; amount: number; recurring?: boolean }[] = [];
+    for (const id of data.services) {
+      if (id === "landing_page") {
+        items.push({ name: lpLabel, amount: lpPrice });
+      } else {
+        const s = SERVICES.find((x) => x.id === id);
+        if (!s) continue;
+        // Ads recur monthly when auto-renew is on
+        const isAd = id === "google_ads" || id === "meta_ads";
+        items.push({
+          name: s.name,
+          amount: s.price,
+          recurring: isAd && data.autoRenewAds,
+        });
+      }
+    }
+    if (data.creativeOption === "provide" && adPlatformCount > 0) {
+      items.push({
+        name: `Ad Creative (${adPlatformCount}× platform${adPlatformCount > 1 ? "s" : ""})`,
+        amount: adPlatformCount * CREATIVE_PRICE,
+      });
+    }
+    return items;
   };
 
   useEffect(() => {
@@ -1449,16 +1479,60 @@ export default function OrderBot() {
               </div>
             </BotBubble>
             <BotBubble delay={500}>
-              Everything look good? We&apos;ll send you an invoice for payment
-              once your campaign is ready. Hit confirm to place your order.
+              Everything look good? Continue to payment to lock in your
+              campaign.
             </BotBubble>
             {ready && (
               <div className="pl-11 animate-[fadeUp_0.3s_ease]">
-                <PrimaryButton onClick={submitOrder} disabled={submitting}>
-                  {submitting
-                    ? "Placing Order..."
-                    : `Confirm Order: ${fmtCur(total)} →`}
+                <PrimaryButton onClick={() => goTo("payment")}>
+                  Continue to Payment: {fmtCur(total)} →
                 </PrimaryButton>
+              </div>
+            )}
+          </>
+        );
+
+      case "payment":
+        return (
+          <>
+            <BotBubble>
+              <div className="mb-1.5">
+                <strong className="text-foreground">Secure checkout.</strong>
+              </div>
+              <div className="text-[13.5px]">
+                Pay <strong className="text-foreground">{fmtCur(total)}</strong>{" "}
+                with card, Apple Pay, or Google Pay.
+                {data.autoRenewAds && hasAds && (
+                  <>
+                    {" "}
+                    Your ads will auto-renew every 30 days at the same rate.
+                    Cancel anytime.
+                  </>
+                )}
+              </div>
+            </BotBubble>
+            {ready && (
+              <div className={inputWrap}>
+                <StripePayment
+                  email={data.email}
+                  name={data.name}
+                  phone={data.phone}
+                  property={data.property}
+                  campaignType={data.campaignType}
+                  autoRenewAds={data.autoRenewAds && hasAds}
+                  lineItems={buildLineItems()}
+                  total={total}
+                  metadata={{
+                    name: data.name,
+                    email: data.email,
+                    property: data.property,
+                    campaignType: data.campaignType,
+                  }}
+                  onSuccess={() => {
+                    addUser(`Paid ${fmtCur(total)}`);
+                    submitOrder(true);
+                  }}
+                />
               </div>
             )}
           </>
@@ -1477,10 +1551,10 @@ export default function OrderBot() {
                 <strong className="text-foreground">
                   {data.name.split(" ")[0]}
                 </strong>
-                . Your campaign is being built right now. You&apos;ll receive a
-                confirmation email at{" "}
+                . Your payment is processed and your campaign is being built
+                right now. You&apos;ll receive a confirmation email at{" "}
                 <strong className="text-foreground">{data.email}</strong> with
-                your order details, invoice, and next steps.
+                your order details, receipt, and next steps.
               </div>
               <div className="mt-3.5 px-4 py-2.5 rounded-lg bg-accent/10 border border-accent/25 text-[13px] text-accent">
                 {data.skipAds ? (
