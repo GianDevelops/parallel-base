@@ -12,21 +12,21 @@ const SERVICES = [
     name: "Google Ads Campaign",
     price: 395,
     tag: "High Intent",
-    desc: "30-day campaign · ad budget included. Search, Display & Performance Max — intercepts buyers actively searching your market.",
+    desc: "30 days · ad budget included. Search + Display + Performance Max.",
   },
   {
     id: "meta_ads",
     name: "Meta Ads Campaign",
     price: 345,
     tag: "Visual Impact",
-    desc: "30-day campaign · ad budget included. Facebook & Instagram ads targeting life-event signals and financial behavior.",
+    desc: "30 days · ad budget included. Facebook + Instagram targeting.",
   },
   {
     id: "landing_page",
     name: "Lead Generation Landing Page",
     price: 595,
     tag: "Conversion Engine",
-    desc: "Includes 6 months live · 30% off renewal thereafter. Custom-built, sub-millisecond page with lead capture and CRM integration.",
+    desc: "6 months live · 30% off renewal. Custom page, lead capture, CRM-wired.",
     recommended: true,
   },
   {
@@ -34,7 +34,7 @@ const SERVICES = [
     name: "Property Tour Video on YouTube",
     price: 245,
     tag: "Video Reach",
-    desc: "Promote your property tour video to targeted audiences on YouTube.",
+    desc: "Targeted YouTube placement for your property tour video.",
   },
 ];
 
@@ -69,21 +69,33 @@ const BUNDLE = {
 const STEPS = [
   "welcome",
   "contact",
-  "property",
   "campaign",
+  "property",
+  "launch",
   "services",
   "upsell",
   "destination",
   "targeting",
   "creative",
+  "brand_assets",
   "domain",
-  "launch",
   "summary",
   "payment",
   "confirmation",
 ];
 
 const CREATIVE_PRICE = 15;
+const DOMAIN_PRICE = 25;
+
+// Sample ad creatives shown when the customer asks us to build creative for them.
+// We pick 3 at random for the style picker.
+const CREATIVE_SAMPLES = [
+  { file: "ad-malibu-luxury.jpg", label: "Malibu Luxury" },
+  { file: "ad-miami-dream.jpg", label: "Miami Dream" },
+  { file: "ad-newport-coastal.jpg", label: "Newport Coastal" },
+  { file: "ad-santa-monica-ocean.jpg", label: "Santa Monica Ocean" },
+  { file: "ad-seattle-luxury.jpg", label: "Seattle Luxury" },
+];
 
 const minDate = () => {
   const d = new Date();
@@ -264,28 +276,30 @@ function ServiceCard({
   return (
     <div
       onClick={onToggle}
-      className={`border px-4 py-4 rounded-xl cursor-pointer transition-all relative ${
+      className={`border px-3.5 py-2 rounded-xl cursor-pointer transition-all relative ${
         selected
           ? "border-accent bg-accent/10 shadow-[0_0_0_3px_rgba(0,229,204,0.1)]"
           : "border-border/50 bg-background hover:border-border-light"
       }`}
     >
-      <div className="flex justify-between items-start mb-1.5">
-        <div>
-          <span
-            className={`text-[10px] font-bold tracking-[0.08em] uppercase mb-1 block ${
-              selected ? "text-accent" : "text-muted/50"
-            }`}
-          >
-            {service.tag}
-          </span>
-          <span className="font-semibold text-[15px] text-foreground">
-            {service.name}
-          </span>
+      <div className="flex justify-between items-center gap-3">
+        <div className="min-w-0">
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="font-semibold text-[13.5px] text-foreground leading-tight">
+              {service.name}
+            </span>
+            <span
+              className={`text-[9px] font-bold tracking-[0.08em] uppercase leading-none ${
+                selected ? "text-accent" : "text-muted/40"
+              }`}
+            >
+              {service.tag}
+            </span>
+          </div>
         </div>
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-2 flex-shrink-0">
           <span
-            className={`font-bold text-[17px] ${selected ? "text-accent" : "text-foreground"}`}
+            className={`font-bold text-[15px] ${selected ? "text-accent" : "text-foreground"}`}
           >
             {fmtCur(service.price)}
           </span>
@@ -304,10 +318,9 @@ function ServiceCard({
           </div>
         </div>
       </div>
-      <p className="text-[13px] text-muted/70 leading-snug">{service.desc}</p>
       {service.recommended && (
-        <div className="absolute -top-2.5 right-4 bg-accent text-background text-[10px] font-bold px-2.5 py-0.5 rounded-md tracking-[0.05em] uppercase">
-          RECOMMENDED
+        <div className="absolute -top-2 right-3 bg-accent text-background text-[9px] font-bold px-2 py-0.5 rounded-md tracking-[0.05em] uppercase leading-none">
+          Recommended
         </div>
       )}
     </div>
@@ -374,6 +387,10 @@ interface OrderData {
   phone: string;
   email: string;
   property: string;
+  brandFocusArea: string;
+  buildingName: string;
+  buildingMaterialsLink: string;
+  brandAssetsLink: string;
   services: string[];
   campaignType: "" | "listing" | "brand" | "building";
   skipAds: boolean;
@@ -382,6 +399,8 @@ interface OrderData {
   audiences: string[];
   websites: string[];
   creativeOption: "" | "own" | "provide";
+  creativeStyle: string;
+  creativeLink: string;
   autoRenewAds: boolean;
   domainOwnership: "" | "owns" | "needs_purchase";
   existingDomain: string;
@@ -390,12 +409,16 @@ interface OrderData {
 }
 
 export default function OrderBot() {
-  const [step, setStep] = useState(0);
+  const [step, setStepRaw] = useState(0);
   const [data, setData] = useState<OrderData>({
     name: "",
     phone: "",
     email: "",
     property: "",
+    brandFocusArea: "",
+    buildingName: "",
+    buildingMaterialsLink: "",
+    brandAssetsLink: "",
     services: [],
     campaignType: "",
     skipAds: false,
@@ -404,6 +427,8 @@ export default function OrderBot() {
     audiences: ["", "", "", ""],
     websites: ["", "", "", ""],
     creativeOption: "",
+    creativeStyle: "",
+    creativeLink: "",
     autoRenewAds: false,
     domainOwnership: "",
     existingDomain: "",
@@ -415,6 +440,32 @@ export default function OrderBot() {
   const [submitting, setSubmitting] = useState(false);
   const endRef = useRef<HTMLDivElement>(null);
 
+  // History stack of visited step indices for the Back button
+  const historyRef = useRef<number[]>([0]);
+
+  // 3 random creative samples chosen on the client to avoid hydration mismatch
+  const [creativeSamples, setCreativeSamples] = useState<typeof CREATIVE_SAMPLES>([]);
+  useEffect(() => {
+    if (data.creativeOption === "provide" && creativeSamples.length === 0) {
+      const shuffled = [...CREATIVE_SAMPLES].sort(() => Math.random() - 0.5);
+      setCreativeSamples(shuffled.slice(0, 3));
+    }
+  }, [data.creativeOption, creativeSamples.length]);
+
+  // Wrap setStep so every forward transition is recorded
+  const setStep = (next: number) => {
+    historyRef.current.push(next);
+    setStepRaw(next);
+  };
+
+  const goBack = () => {
+    if (historyRef.current.length <= 1) return;
+    historyRef.current.pop();
+    const previous = historyRef.current[historyRef.current.length - 1];
+    setMsgs([]);
+    setStepRaw(previous);
+  };
+
   const cur = STEPS[step];
   const hasLP = data.services.includes("landing_page");
   const hasGoogle = data.services.includes("google_ads");
@@ -423,6 +474,8 @@ export default function OrderBot() {
   const adPlatformCount = [hasGoogle, hasMeta].filter(Boolean).length;
   const creativeCost =
     data.creativeOption === "provide" ? adPlatformCount * CREATIVE_PRICE : 0;
+  const domainCost =
+    data.domainOwnership === "needs_purchase" ? DOMAIN_PRICE : 0;
 
   // Landing page price depends on campaignType (if set), otherwise default from SERVICES
   const lpVariant = data.campaignType
@@ -435,7 +488,7 @@ export default function OrderBot() {
     if (id === "landing_page") return sum + lpPrice;
     return sum + (SERVICES.find((x) => x.id === id)?.price || 0);
   }, 0);
-  const total = servicesSubtotal + creativeCost;
+  const total = servicesSubtotal + creativeCost + domainCost;
 
   // Dynamic bundle price: ads + landing page price (depends on campaign type)
   const bundlePrice = 395 + 345 + lpPrice;
@@ -443,64 +496,36 @@ export default function OrderBot() {
   const goTo = (name: string) => {
     const i = STEPS.indexOf(name);
     if (i >= 0) {
-      if (name === "targeting") setMsgs([]);
+      // Clear chat on any structural jump so previous reply bubbles don't
+      // bleed into a fresh step (e.g. user URL bubble showing on summary).
+      setMsgs([]);
       setStep(i);
     }
   };
 
-  const next = () => {
-    const nextStep = STEPS[step + 1];
-    // After services: if LP is selected, skip upsell + destination (go to targeting)
-    if (nextStep === "upsell" && hasLP) {
-      setMsgs([]);
-      setStep(step + 3);
-      return;
-    }
-    // After services: if no ads, skip upsell (it's an ad-traffic nudge)
-    if (nextStep === "upsell" && !hasAds) {
-      setMsgs([]);
-      setStep(step + 2);
-      return;
-    }
-    // After upsell: if LP exists now, skip destination
-    if (nextStep === "destination" && hasLP) {
-      setMsgs([]);
-      setStep(step + 2);
-      return;
-    }
-    // No ads — skip destination + targeting + creative
-    if (nextStep === "destination" && !hasAds) {
-      setMsgs([]);
-      setStep(step + 1);
-      return;
-    }
-    if (nextStep === "targeting" && !hasAds) {
-      setMsgs([]);
-      setStep(step + 2);
-      return;
-    }
-    if (nextStep === "creative" && !hasAds) {
-      setMsgs([]);
-      setStep(step + 2);
-      return;
-    }
-    // Skip domain step unless we're in the LP-only path (which uses goTo, so this guard
-    // protects the ad flows from accidentally landing on domain)
-    if (nextStep === "domain" && !data.skipAds) {
-      setMsgs([]);
-      setStep(step + 1);
-      return;
-    }
+  const shouldSkip = (name: string): boolean => {
+    if (name === "upsell" && (hasLP || !hasAds)) return true;
+    if (name === "destination" && (hasLP || !hasAds)) return true;
+    if (name === "targeting" && !hasAds) return true;
+    if (name === "creative" && !hasAds) return true;
+    // brand_assets is shown for: any brand campaign, or LP-only listing
+    // (LP-only building already collects materials in the property step)
     if (
-      nextStep === "targeting" ||
-      nextStep === "services" ||
-      nextStep === "campaign" ||
-      nextStep === "creative" ||
-      nextStep === "launch" ||
-      nextStep === "summary"
+      name === "brand_assets" &&
+      data.campaignType !== "brand" &&
+      !(data.skipAds && data.campaignType === "listing")
     )
-      setMsgs([]);
-    setStep(step + 1);
+      return true;
+    // Domain is only for the LP-only path (skipAds). Ad flows skip it.
+    if (name === "domain" && !data.skipAds) return true;
+    return false;
+  };
+
+  const next = () => {
+    let target = step + 1;
+    while (target < STEPS.length && shouldSkip(STEPS[target])) target++;
+    setMsgs([]);
+    setStep(target);
   };
 
   const addUser = (text: string) =>
@@ -524,7 +549,13 @@ export default function OrderBot() {
             return { name: s?.name, price: s?.price };
           }),
           campaignType: data.campaignType,
+          brandFocusArea: data.brandFocusArea,
+          buildingName: data.buildingName,
+          buildingMaterialsLink: data.buildingMaterialsLink,
+          brandAssetsLink: data.brandAssetsLink,
           autoRenewAds: data.autoRenewAds,
+          creativeStyle: data.creativeStyle,
+          creativeLink: data.creativeLink,
           skipAds: data.skipAds,
           domainOwnership: data.domainOwnership,
           existingDomain: data.existingDomain,
@@ -565,6 +596,9 @@ export default function OrderBot() {
         amount: adPlatformCount * CREATIVE_PRICE,
       });
     }
+    if (data.domainOwnership === "needs_purchase") {
+      items.push({ name: "Domain Registration", amount: DOMAIN_PRICE });
+    }
     return items;
   };
 
@@ -581,7 +615,7 @@ export default function OrderBot() {
   const selectBundle = () =>
     setData((d) => ({ ...d, services: [...BUNDLE.ids] }));
 
-  const inputWrap = "pl-11 flex flex-col gap-2.5 animate-[fadeUp_0.3s_ease]";
+  const inputWrap = "pl-11 flex flex-col gap-2 animate-[fadeUp_0.3s_ease]";
 
   function renderStep() {
     switch (cur) {
@@ -650,7 +684,9 @@ export default function OrderBot() {
           </>
         );
 
-      case "property":
+      case "property": {
+        const isBrand = data.campaignType === "brand";
+        const isBuilding = data.campaignType === "building";
         return (
           <>
             <BotBubble>
@@ -658,20 +694,103 @@ export default function OrderBot() {
               <strong className="text-foreground">
                 {data.name.split(" ")[0]}
               </strong>
-              ! What&apos;s the property address or MLS link?
+              !{" "}
+              {isBrand ? (
+                <>
+                  Which market are you focused on? Drop in the city,
+                  neighborhood, or niche you want to dominate — we&apos;ll
+                  build the campaign around it.
+                </>
+              ) : isBuilding ? (
+                <>
+                  What&apos;s the building or new construction project? Share
+                  the name, the address (or MLS link), and a link to your
+                  materials —{" "}
+                  <strong className="text-foreground">
+                    floor plans, renderings, brochures, and project info
+                  </strong>
+                  , plus{" "}
+                  <strong className="text-foreground">
+                    your headshot and any brand images
+                  </strong>{" "}
+                  you&apos;d like used. Google Drive, Dropbox, or a project
+                  page works.
+                </>
+              ) : (
+                <>What&apos;s the property address or MLS link?</>
+              )}
             </BotBubble>
             {ready && (
               <div className={inputWrap}>
-                <TextInput
-                  placeholder="Property address or MLS URL"
-                  value={data.property}
-                  onChange={(v) => setData((d) => ({ ...d, property: v }))}
-                />
+                {isBrand ? (
+                  <TextInput
+                    placeholder="e.g. Coral Gables, FL"
+                    value={data.brandFocusArea}
+                    onChange={(v) =>
+                      setData((d) => ({ ...d, brandFocusArea: v }))
+                    }
+                  />
+                ) : isBuilding ? (
+                  <>
+                    <TextInput
+                      placeholder="Building / project name (e.g. The Estates at Coral Gables)"
+                      value={data.buildingName}
+                      onChange={(v) =>
+                        setData((d) => ({ ...d, buildingName: v }))
+                      }
+                    />
+                    <TextInput
+                      placeholder="Address or MLS URL"
+                      value={data.property}
+                      onChange={(v) => setData((d) => ({ ...d, property: v }))}
+                    />
+                    <TextInput
+                      placeholder="Marketing materials link (Drive, Dropbox, or URL)"
+                      value={data.buildingMaterialsLink}
+                      onChange={(v) =>
+                        setData((d) => ({ ...d, buildingMaterialsLink: v }))
+                      }
+                      type="url"
+                    />
+                  </>
+                ) : (
+                  <TextInput
+                    placeholder="Property address or MLS URL"
+                    value={data.property}
+                    onChange={(v) => setData((d) => ({ ...d, property: v }))}
+                  />
+                )}
                 <PrimaryButton
-                  disabled={!data.property}
+                  disabled={
+                    isBrand
+                      ? !data.brandFocusArea.trim()
+                      : isBuilding
+                      ? !data.buildingName.trim() ||
+                        !data.property.trim() ||
+                        !data.buildingMaterialsLink.trim()
+                      : !data.property
+                  }
                   onClick={() => {
-                    addUser(data.property);
-                    next();
+                    if (isBrand) {
+                      addUser(data.brandFocusArea);
+                    } else if (isBuilding) {
+                      addUser(
+                        `${data.buildingName} — ${data.property} · materials: ${data.buildingMaterialsLink}`
+                      );
+                    } else {
+                      addUser(data.property);
+                    }
+                    // LP-only path skips services/ads steps. Brand and
+                    // Listing campaigns get the brand-assets prompt first;
+                    // Building already collected materials in this step.
+                    if (data.skipAds) {
+                      if (
+                        data.campaignType === "brand" ||
+                        data.campaignType === "listing"
+                      )
+                        goTo("brand_assets");
+                      else goTo("domain");
+                    } else next();
                   }}
                 >
                   Continue →
@@ -680,6 +799,7 @@ export default function OrderBot() {
             )}
           </>
         );
+      }
 
       case "services": {
         // Dynamic service list — swap generic landing_page with campaign-specific variant
@@ -691,64 +811,53 @@ export default function OrderBot() {
         return (
           <>
             <BotBubble>
-              Which services do you need for this{" "}
-              <strong className="text-foreground">
-                {data.campaignType} campaign
-              </strong>
-              ? Select all that apply.
-            </BotBubble>
-            <BotBubble delay={700}>
-              <div className="flex items-center gap-2 mb-1">
-                <span className="text-xs">⚡</span>
-                <strong className="text-accent text-[12.5px] tracking-[0.03em]">
-                  PRO TIP
+              <div>
+                Which services do you need for this{" "}
+                <strong className="text-foreground">
+                  {data.campaignType} campaign
                 </strong>
+                ? Select all that apply.
               </div>
-              <span className="text-[13.5px]">
-                Agents who run{" "}
-                <strong className="text-foreground">
-                  Google Ads + Meta Ads + {lpLabel}
-                </strong>{" "}
-                together see{" "}
-                <strong className="text-foreground">
-                  3–5× more qualified leads
-                </strong>{" "}
-                than ads alone. The landing page is the conversion engine —
-                without it, ad traffic has nowhere optimized to land.
-              </span>
+              <div className="mt-2 flex items-start gap-2 text-[12.5px]">
+                <span className="text-accent flex-shrink-0">⚡</span>
+                <span className="leading-snug">
+                  Running{" "}
+                  <strong className="text-foreground">
+                    ads + {lpLabel}
+                  </strong>{" "}
+                  together gets{" "}
+                  <strong className="text-foreground">3–5× more leads</strong>{" "}
+                  than ads alone.
+                </span>
+              </div>
             </BotBubble>
             {ready && (
               <div className={inputWrap}>
                 {/* Bundle option */}
                 <div
                   onClick={selectBundle}
-                  className={`border px-4 py-3.5 rounded-xl cursor-pointer transition-all ${
+                  className={`border px-3.5 py-2 rounded-xl cursor-pointer transition-all ${
                     data.services.length >= 3 &&
                     BUNDLE.ids.every((id) => data.services.includes(id))
                       ? "border-accent bg-accent/10 shadow-[0_0_0_3px_rgba(0,229,204,0.1)]"
                       : "border-dashed border-accent/25 bg-accent/5"
                   }`}
                 >
-                  <div className="flex justify-between items-center">
-                    <div>
-                      <div className="text-[10px] font-bold text-accent tracking-[0.08em] uppercase mb-0.5">
-                        {BUNDLE.tagline}
-                      </div>
-                      <div className="font-semibold text-[15px] text-foreground">
-                        {BUNDLE.label}
-                      </div>
-                      <div className="text-[12.5px] text-muted/60 mt-0.5">
-                        Google Ads + Meta Ads + {lpLabel}
+                  <div className="flex justify-between items-center gap-3">
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="font-semibold text-[13.5px] text-foreground leading-tight">
+                          {BUNDLE.label}
+                        </span>
+                        <span className="text-[9px] font-bold text-accent tracking-[0.08em] uppercase leading-none">
+                          {BUNDLE.tagline}
+                        </span>
                       </div>
                     </div>
-                    <span className="font-bold text-[17px] text-accent">
+                    <span className="font-bold text-[15px] text-accent flex-shrink-0">
                       {fmtCur(bundlePrice)}
                     </span>
                   </div>
-                </div>
-
-                <div className="text-center text-xs text-muted/40 py-0.5">
-                  or pick individually
                 </div>
 
                 {displayServices.map((s) => (
@@ -820,64 +929,74 @@ export default function OrderBot() {
             </BotBubble>
             {ready && (
               <div className={inputWrap}>
-                {adOptions.map((opt) => {
-                  const selected =
-                    !data.skipAds && data.campaignType === opt.id;
-                  return (
-                    <div
-                      key={opt.id}
-                      onClick={() =>
-                        setData((d) => ({
-                          ...d,
-                          campaignType: opt.id,
-                          skipAds: false,
-                        }))
-                      }
-                      className={`border px-4 py-4 rounded-xl cursor-pointer transition-all ${
-                        selected
-                          ? "border-accent bg-accent/10 shadow-[0_0_0_3px_rgba(0,229,204,0.1)]"
-                          : "border-border/50 bg-background hover:border-border-light"
-                      }`}
-                    >
+                {!data.skipAds &&
+                  adOptions.map((opt) => {
+                    const selected =
+                      !data.skipAds && data.campaignType === opt.id;
+                    return (
                       <div
-                        className={`font-semibold text-[15px] ${
-                          selected ? "text-accent" : "text-foreground"
+                        key={opt.id}
+                        onClick={() =>
+                          setData((d) => ({
+                            ...d,
+                            campaignType: opt.id,
+                            skipAds: false,
+                          }))
+                        }
+                        className={`border px-4 py-2.5 rounded-xl cursor-pointer transition-all ${
+                          selected
+                            ? "border-accent bg-accent/10 shadow-[0_0_0_3px_rgba(0,229,204,0.1)]"
+                            : "border-border/50 bg-background hover:border-border-light"
                         }`}
                       >
-                        {opt.label}
+                        <div
+                          className={`font-semibold text-[14px] leading-tight ${
+                            selected ? "text-accent" : "text-foreground"
+                          }`}
+                        >
+                          {opt.label} Ads
+                        </div>
+                        <div className="text-[12px] text-muted/70 mt-0.5 leading-snug">
+                          {opt.sub}
+                        </div>
                       </div>
-                      <div className="text-[13px] text-muted/70 mt-0.5">
-                        {opt.sub}
-                      </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
 
                 {/* 4th option: No ads — just a landing page. Expands inline to pick LP type. */}
                 <div
                   onClick={() =>
                     setData((d) => ({
                       ...d,
-                      skipAds: true,
-                      // preserve campaignType if already picked, else clear
-                      campaignType: d.skipAds ? d.campaignType : "",
+                      skipAds: !d.skipAds,
+                      // when toggling back to ads, clear campaignType so the user re-picks
+                      campaignType: d.skipAds ? "" : d.campaignType,
                     }))
                   }
-                  className={`border px-4 py-4 rounded-xl cursor-pointer transition-all ${
+                  className={`border px-4 py-2.5 rounded-xl cursor-pointer transition-all ${
                     data.skipAds
                       ? "border-accent bg-accent/10 shadow-[0_0_0_3px_rgba(0,229,204,0.1)]"
                       : "border-dashed border-border/60 bg-background hover:border-border-light"
                   }`}
                 >
-                  <div
-                    className={`font-semibold text-[15px] ${
-                      data.skipAds ? "text-accent" : "text-foreground"
-                    }`}
-                  >
-                    No ads — just a landing page
-                  </div>
-                  <div className="text-[13px] text-muted/70 mt-0.5">
-                    Skip the ad campaign and just order the landing page.
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <div
+                        className={`font-semibold text-[14px] leading-tight ${
+                          data.skipAds ? "text-accent" : "text-foreground"
+                        }`}
+                      >
+                        No ads — just a landing page
+                      </div>
+                      <div className="text-[12px] text-muted/70 mt-0.5 leading-snug">
+                        Skip the ad campaign and just order the landing page.
+                      </div>
+                    </div>
+                    {data.skipAds && (
+                      <span className="text-[10px] font-bold tracking-[0.08em] uppercase text-accent/70 flex-shrink-0 mt-0.5">
+                        ← Back to ads
+                      </span>
+                    )}
                   </div>
 
                   {data.skipAds && (
@@ -923,12 +1042,11 @@ export default function OrderBot() {
                       data.campaignType[0].toUpperCase() +
                       data.campaignType.slice(1);
                     if (data.skipAds) {
-                      // LP-only path: preconfigure services, skip ad steps, go to domain question
+                      // LP-only path: preconfigure services so the property step
+                      // continues straight to the domain question (skipping ad steps).
                       setData((d) => ({ ...d, services: ["landing_page"] }));
-                      addUser(
-                        `${label} landing page only (no ads)`
-                      );
-                      goTo("domain");
+                      addUser(`${label} landing page only (no ads)`);
+                      next(); // → property step
                     } else {
                       addUser(`${label} campaign`);
                       next();
@@ -1084,28 +1202,26 @@ export default function OrderBot() {
       case "creative":
         return (
           <>
-            <BotBubble>
-              Last thing on the ads — do you have your own ad creative, or
-              should we build it for you?
-            </BotBubble>
+            {!data.creativeOption && (
+              <BotBubble>
+                Last thing on the ads — do you have your own ad creative, or
+                should we build it for you?
+              </BotBubble>
+            )}
             {!data.creativeOption && ready && (
               <div className={inputWrap}>
                 <SecondaryButton
                   onClick={() => {
+                    setMsgs([]);
                     setData((d) => ({ ...d, creativeOption: "own" }));
-                    addUser("I'll provide my own creative");
                   }}
                 >
                   I have my own creative →
                 </SecondaryButton>
                 <PrimaryButton
                   onClick={() => {
+                    setMsgs([]);
                     setData((d) => ({ ...d, creativeOption: "provide" }));
-                    addUser(
-                      `Build creative for me (+${fmtCur(
-                        adPlatformCount * CREATIVE_PRICE
-                      )})`
-                    );
                   }}
                 >
                   Build creative for me (+
@@ -1118,7 +1234,8 @@ export default function OrderBot() {
                 <BotBubble delay={400}>
                   <div className="mb-2">
                     <strong className="text-foreground">
-                      Send these after we email your invoice:
+                      Drop a link to your creative — Google Drive, Dropbox, or
+                      a folder URL works.
                     </strong>
                   </div>
                   <div className="text-[13.5px] leading-relaxed space-y-2">
@@ -1129,8 +1246,6 @@ export default function OrderBot() {
                         </div>
                         <div className="text-muted">
                           Images: 1200×628, 1080×1080, 300×600 (JPG/PNG, &lt;150KB each)
-                          <br />
-                          Copy: 5× headlines (≤30 chars), 3× descriptions (≤90 chars)
                         </div>
                       </div>
                     )}
@@ -1141,23 +1256,30 @@ export default function OrderBot() {
                         </div>
                         <div className="text-muted">
                           Images/Video: 1080×1080 (feed), 1080×1920 (story/reel), 1200×628 (link)
-                          <br />
-                          Copy: 5× primary text, 3× headlines
                         </div>
                       </div>
                     )}
                   </div>
-                  <div className="mt-3 text-[13px] text-muted">
-                    Email to{" "}
-                    <strong className="text-foreground">
-                      creative@parallelbase.io
-                    </strong>{" "}
-                    after we send your invoice.
-                  </div>
                 </BotBubble>
                 {ready && (
                   <div className={inputWrap}>
-                    <PrimaryButton onClick={next}>Continue →</PrimaryButton>
+                    <TextInput
+                      placeholder="Creative link (Drive, Dropbox, or URL)"
+                      value={data.creativeLink}
+                      onChange={(v) =>
+                        setData((d) => ({ ...d, creativeLink: v }))
+                      }
+                      type="url"
+                    />
+                    <PrimaryButton
+                      disabled={!data.creativeLink.trim()}
+                      onClick={() => {
+                        addUser(`Creative: ${data.creativeLink}`);
+                        next();
+                      }}
+                    >
+                      Continue →
+                    </PrimaryButton>
                   </div>
                 )}
               </>
@@ -1165,20 +1287,57 @@ export default function OrderBot() {
             {data.creativeOption === "provide" && (
               <>
                 <BotBubble delay={400}>
-                  Got it. We&apos;ll design creative tailored to your property
-                  for{" "}
-                  <strong className="text-foreground">
-                    {adPlatformCount === 2 ? "both platforms" : "your ad platform"}
-                  </strong>
-                  . Added{" "}
-                  <strong className="text-foreground">
-                    {fmtCur(adPlatformCount * CREATIVE_PRICE)}
-                  </strong>{" "}
-                  to your total.
+                  Got it. Pick a style you like — we&apos;ll model your creative
+                  after it.{" "}
+                  <span className="text-muted/70">
+                    +{fmtCur(adPlatformCount * CREATIVE_PRICE)} added.
+                  </span>
                 </BotBubble>
-                {ready && (
-                  <div className={inputWrap}>
-                    <PrimaryButton onClick={next}>Continue →</PrimaryButton>
+                {ready && creativeSamples.length > 0 && (
+                  <div className="animate-[fadeUp_0.3s_ease]">
+                    <div className="grid grid-cols-3 gap-2 mb-3">
+                      {creativeSamples.map((sample) => {
+                        const selected = data.creativeStyle === sample.file;
+                        return (
+                          <button
+                            key={sample.file}
+                            onClick={() =>
+                              setData((d) => ({
+                                ...d,
+                                creativeStyle: sample.file,
+                              }))
+                            }
+                            className={`group relative border-2 overflow-hidden transition-all rounded-lg ${
+                              selected
+                                ? "border-accent shadow-[0_0_0_3px_rgba(0,229,204,0.15)]"
+                                : "border-border/50 hover:border-border-light"
+                            }`}
+                          >
+                            <Image
+                              src={`/images/ads/${sample.file}`}
+                              alt={`${sample.label} ad style`}
+                              width={400}
+                              height={300}
+                              sizes="(max-width: 768px) 33vw, 200px"
+                              className="w-full h-auto block"
+                            />
+                            {selected && (
+                              <div className="absolute top-1.5 right-1.5 w-5 h-5 bg-accent rounded-full flex items-center justify-center shadow-[0_0_0_2px_rgba(0,0,0,0.5)]">
+                                <span className="text-background font-extrabold text-[11px] leading-none">
+                                  ✓
+                                </span>
+                              </div>
+                            )}
+                          </button>
+                        );
+                      })}
+                    </div>
+                    <PrimaryButton
+                      onClick={next}
+                      disabled={!data.creativeStyle}
+                    >
+                      {data.creativeStyle ? "Continue →" : "Pick a style above"}
+                    </PrimaryButton>
                   </div>
                 )}
               </>
@@ -1186,33 +1345,74 @@ export default function OrderBot() {
           </>
         );
 
-      case "domain":
+      case "brand_assets":
         return (
           <>
             <BotBubble>
-              Quick question on the domain. Do you already own a URL for this
-              landing page, or would you like us to buy one for you?
+              {data.campaignType === "brand"
+                ? "Last thing on the brand —"
+                : "One more thing —"}{" "}
+              drop a link to your{" "}
+              <strong className="text-foreground">
+                headshot, logo, and any brand materials
+              </strong>{" "}
+              you&apos;d like featured on the page. Google Drive, Dropbox, or a
+              folder URL all work.
             </BotBubble>
+            {ready && (
+              <div className={inputWrap}>
+                <TextInput
+                  placeholder="Brand assets link (Drive, Dropbox, or URL)"
+                  value={data.brandAssetsLink}
+                  onChange={(v) =>
+                    setData((d) => ({ ...d, brandAssetsLink: v }))
+                  }
+                  type="url"
+                />
+                <PrimaryButton
+                  disabled={!data.brandAssetsLink.trim()}
+                  onClick={() => {
+                    addUser(`Brand assets: ${data.brandAssetsLink}`);
+                    if (data.skipAds) goTo("domain");
+                    else next();
+                  }}
+                >
+                  Continue →
+                </PrimaryButton>
+              </div>
+            )}
+          </>
+        );
+
+      case "domain":
+        return (
+          <>
+            {!data.domainOwnership && (
+              <BotBubble>
+                Quick question on the domain. Do you already own a URL for this
+                landing page, or would you like us to buy one for you?
+              </BotBubble>
+            )}
             {!data.domainOwnership && ready && (
               <div className={inputWrap}>
                 <SecondaryButton
                   onClick={() => {
+                    setMsgs([]);
                     setData((d) => ({ ...d, domainOwnership: "owns" }));
-                    addUser("I already have a domain");
                   }}
                 >
                   I already have a domain →
                 </SecondaryButton>
                 <PrimaryButton
                   onClick={() => {
+                    setMsgs([]);
                     setData((d) => ({
                       ...d,
                       domainOwnership: "needs_purchase",
                     }));
-                    addUser("Buy a domain for me");
                   }}
                 >
-                  Buy a domain for me →
+                  Buy a domain for me (+{fmtCur(DOMAIN_PRICE)}) →
                 </PrimaryButton>
               </div>
             )}
@@ -1327,17 +1527,54 @@ export default function OrderBot() {
       case "summary":
         return (
           <>
-            <BotBubble>
-              <div className="mb-2">
-                <strong className="text-[15px] text-foreground">
+            <div className="w-full bg-surface border border-border/50 rounded-xl px-3.5 py-2.5 mb-2 animate-[fadeUp_0.3s_ease]">
+              <div className="mb-1.5">
+                <strong className="text-[14px] text-foreground">
                   Order Summary
                 </strong>
               </div>
-              <div className="border-t border-border pt-2">
+              <div className="border-t border-border pt-1.5">
+                {data.campaignType === "building" && data.buildingName && (
+                  <div className="flex justify-between gap-4 mb-1.5 text-xs">
+                    <span className="text-muted/50 uppercase tracking-[0.06em]">
+                      Building
+                    </span>
+                    <span className="text-muted text-right">
+                      {data.buildingName}
+                    </span>
+                  </div>
+                )}
                 <div className="flex justify-between gap-4 mb-1.5 text-xs">
-                  <span className="text-muted/50 uppercase tracking-[0.06em]">Property</span>
-                  <span className="text-muted text-right">{data.property}</span>
+                  <span className="text-muted/50 uppercase tracking-[0.06em]">
+                    {data.campaignType === "brand" ? "Focus Market" : "Property"}
+                  </span>
+                  <span className="text-muted text-right">
+                    {data.campaignType === "brand"
+                      ? data.brandFocusArea
+                      : data.property}
+                  </span>
                 </div>
+                {data.campaignType === "building" &&
+                  data.buildingMaterialsLink && (
+                    <div className="flex justify-between gap-4 mb-1.5 text-xs">
+                      <span className="text-muted/50 uppercase tracking-[0.06em]">
+                        Materials
+                      </span>
+                      <span className="text-muted/70 text-right break-all text-[12px]">
+                        {data.buildingMaterialsLink}
+                      </span>
+                    </div>
+                  )}
+                {data.brandAssetsLink && (
+                  <div className="flex justify-between gap-4 mb-1.5 text-xs">
+                    <span className="text-muted/50 uppercase tracking-[0.06em]">
+                      Brand Assets
+                    </span>
+                    <span className="text-muted/70 text-right break-all text-[12px]">
+                      {data.brandAssetsLink}
+                    </span>
+                  </div>
+                )}
 
                 {data.campaignType && (
                   <div className="flex justify-between gap-4 mb-1.5 text-xs">
@@ -1391,6 +1628,24 @@ export default function OrderBot() {
                     </span>
                   </div>
                 )}
+                {data.domainOwnership === "needs_purchase" && (
+                  <div className="flex justify-between gap-4 mb-0.5 text-sm">
+                    <span className="text-muted">Domain Registration</span>
+                    <span className="font-semibold text-foreground flex-shrink-0">
+                      {fmtCur(DOMAIN_PRICE)}
+                    </span>
+                  </div>
+                )}
+                {data.creativeOption === "own" && data.creativeLink && (
+                  <div className="flex justify-between gap-4 mt-1.5 text-xs">
+                    <span className="text-muted/50 uppercase tracking-[0.06em]">
+                      Creative
+                    </span>
+                    <span className="text-muted/70 text-right break-all text-[12px]">
+                      {data.creativeLink}
+                    </span>
+                  </div>
+                )}
 
                 {!hasLP && data.adDestination && (
                   <div className="flex justify-between gap-4 mt-1.5 text-xs">
@@ -1424,7 +1679,7 @@ export default function OrderBot() {
                   </div>
                 )}
 
-                {!data.skipAds && (
+                {!data.skipAds && data.launchDate && (
                   <div className="flex justify-between gap-4 mt-1.5 mb-2 text-xs">
                     <span className="text-muted/50 uppercase tracking-[0.06em]">Launch</span>
                     <span className="text-muted">{fmtDate(data.launchDate)}</span>
@@ -1445,14 +1700,14 @@ export default function OrderBot() {
                     onClick={() =>
                       setData((d) => ({ ...d, autoRenewAds: !d.autoRenewAds }))
                     }
-                    className={`mt-3 border rounded-lg px-3 py-2.5 cursor-pointer transition-all flex items-start gap-3 ${
+                    className={`mt-2 border rounded-lg px-2.5 py-1.5 cursor-pointer transition-all flex items-center gap-2.5 ${
                       data.autoRenewAds
                         ? "border-accent bg-accent/10"
                         : "border-border/50 bg-background hover:border-border-light"
                     }`}
                   >
                     <div
-                      className={`w-4 h-4 mt-0.5 rounded border-2 flex items-center justify-center flex-shrink-0 ${
+                      className={`w-4 h-4 rounded border-2 flex items-center justify-center flex-shrink-0 ${
                         data.autoRenewAds
                           ? "border-accent bg-accent"
                           : "border-muted/40 bg-transparent"
@@ -1464,26 +1719,20 @@ export default function OrderBot() {
                         </span>
                       )}
                     </div>
-                    <div className="flex-1">
-                      <div className="text-[13px] font-semibold text-foreground">
+                    <div className="flex-1 min-w-0 leading-tight">
+                      <span className="text-[12.5px] font-semibold text-foreground">
                         Auto-renew ads every 30 days
-                      </div>
-                      <div className="text-[11.5px] text-muted/70 leading-snug">
-                        Keep campaigns live past 30 days. Charged again at the
-                        same rate each cycle. Cancel anytime. Off by default —
-                        campaign just ends after 30 days.
-                      </div>
+                      </span>
+                      <span className="text-[11px] text-muted/70 ml-2">
+                        · same rate · cancel anytime
+                      </span>
                     </div>
                   </div>
                 )}
               </div>
-            </BotBubble>
-            <BotBubble delay={500}>
-              Everything look good? Continue to payment to lock in your
-              campaign.
-            </BotBubble>
+            </div>
             {ready && (
-              <div className="pl-11 animate-[fadeUp_0.3s_ease]">
+              <div className="animate-[fadeUp_0.3s_ease]">
                 <PrimaryButton onClick={() => goTo("payment")}>
                   Continue to Payment: {fmtCur(total)} →
                 </PrimaryButton>
@@ -1496,20 +1745,15 @@ export default function OrderBot() {
         return (
           <>
             <BotBubble>
-              <div className="mb-1.5">
-                <strong className="text-foreground">Secure checkout.</strong>
-              </div>
-              <div className="text-[13.5px]">
-                Pay <strong className="text-foreground">{fmtCur(total)}</strong>{" "}
-                with card, Apple Pay, or Google Pay.
+              <span className="text-[13.5px]">
+                <strong className="text-foreground">Secure checkout</strong> —
+                pay <strong className="text-foreground">{fmtCur(total)}</strong>
                 {data.autoRenewAds && hasAds && (
-                  <>
-                    {" "}
-                    Your ads will auto-renew every 30 days at the same rate.
-                    Cancel anytime.
-                  </>
+                  <span className="text-muted/70">
+                    {" · ads auto-renew every 30 days"}
+                  </span>
                 )}
-              </div>
+              </span>
             </BotBubble>
             {ready && (
               <div className={inputWrap}>
@@ -1517,7 +1761,13 @@ export default function OrderBot() {
                   email={data.email}
                   name={data.name}
                   phone={data.phone}
-                  property={data.property}
+                  property={
+                    data.campaignType === "brand"
+                      ? data.brandFocusArea
+                      : data.campaignType === "building" && data.buildingName
+                      ? `${data.buildingName} — ${data.property}`
+                      : data.property
+                  }
                   campaignType={data.campaignType}
                   autoRenewAds={data.autoRenewAds && hasAds}
                   lineItems={buildLineItems()}
@@ -1525,7 +1775,12 @@ export default function OrderBot() {
                   metadata={{
                     name: data.name,
                     email: data.email,
-                    property: data.property,
+                    property:
+                      data.campaignType === "brand"
+                        ? data.brandFocusArea
+                        : data.campaignType === "building" && data.buildingName
+                        ? `${data.buildingName} — ${data.property}`
+                        : data.property,
                     campaignType: data.campaignType,
                   }}
                   onSuccess={() => {
@@ -1591,6 +1846,19 @@ export default function OrderBot() {
             Parallel Base
           </div>
         </div>
+        {historyRef.current.length > 1 &&
+          cur !== "confirmation" &&
+          cur !== "payment" &&
+          !submitting && (
+            <button
+              onClick={goBack}
+              className="relative flex items-center gap-1.5 text-[11px] text-muted hover:text-foreground transition-colors px-2.5 py-1 border border-border/40 rounded-md hover:border-border-light"
+              aria-label="Go back to previous step"
+            >
+              <span className="text-[14px] leading-none">←</span>
+              Back
+            </button>
+          )}
         <div className="relative flex items-center gap-1.5">
           <div className="w-1.5 h-1.5 rounded-full bg-accent shadow-[0_0_6px_rgba(0,229,204,0.4)] animate-pulse" />
           <span className="text-[10px] text-accent/60 font-medium">Online</span>
@@ -1598,7 +1866,7 @@ export default function OrderBot() {
       </div>
 
       {/* Chat area */}
-      <div className="flex-1 min-h-0 px-4 py-5 overflow-y-auto flex flex-col">
+      <div className="flex-1 min-h-0 px-4 py-3 overflow-y-auto flex flex-col">
         {msgs.map((m, i) =>
           m.from === "user" ? (
             <UserBubble key={i}>{m.text}</UserBubble>
@@ -1607,7 +1875,7 @@ export default function OrderBot() {
           )
         )}
         {renderStep()}
-        <div ref={endRef} className="h-5" />
+        <div ref={endRef} />
       </div>
 
       {/* Progress bar */}

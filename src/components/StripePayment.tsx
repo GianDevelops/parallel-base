@@ -231,8 +231,8 @@ function PaymentForm({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-      <PaymentElement />
+    <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+      <PaymentElement options={{ layout: { type: "tabs", defaultCollapsed: false } }} />
       {error && (
         <div className="text-[13px] text-red-400 border border-red-500/40 bg-red-500/10 px-3 py-2 rounded-lg">
           {error}
@@ -241,7 +241,7 @@ function PaymentForm({
       <button
         type="submit"
         disabled={!stripe || submitting}
-        className={`w-full px-7 py-3.5 rounded-xl text-sm font-bold tracking-[0.01em] transition-all ${
+        className={`w-full px-7 py-3 rounded-xl text-sm font-bold tracking-[0.01em] transition-all ${
           submitting || !stripe
             ? "bg-surface-light text-muted/40 cursor-not-allowed"
             : "bg-accent text-background cursor-pointer hover:-translate-y-0.5 hover:shadow-[0_8px_28px_rgba(0,229,204,0.3)] active:translate-y-0 active:shadow-none"
@@ -249,8 +249,8 @@ function PaymentForm({
       >
         {submitting ? "Processing…" : `Pay $${total.toLocaleString()} →`}
       </button>
-      <p className="text-[10.5px] text-muted/50 text-center font-mono uppercase tracking-[0.15em]">
-        Secured by Stripe · 256-bit encryption
+      <p className="text-[10px] text-muted/40 text-center font-mono uppercase tracking-[0.15em]">
+        Secured by Stripe
       </p>
     </form>
   );
