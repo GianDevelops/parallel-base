@@ -1,16 +1,13 @@
-// Guard: every marketing page in src/app must be "kept local" in netlify.toml,
-// otherwise the catch-all proxy rule would send it to app.parallelbase.io.
+// Guard: every marketing page under src/app must be listed as a local page in
+// the proxy edge function (netlify/edge-functions/app-proxy.ts), otherwise that
+// edge function would proxy it to app.parallelbase.io instead of serving it.
 //
 // This runs automatically before every build (see package.json "build" script).
 // If you add a new marketing page and forget to whitelist it, the build fails
 // here with instructions instead of silently proxying your new page away.
 //
-// To fix a failure: add a keep-local rule to netlify.toml, e.g.
-//   [[redirects]]
-//     from = "/your-new-page"
-//     to = "/your-new-page"
-//     status = 200
-// placed ABOVE the "/*" catch-all proxy rule.
+// To fix a failure: add the path to the LOCAL_PAGES array in
+// netlify/edge-functions/app-proxy.ts, then rebuild.
 
 import { readFileSync, readdirSync, statSync, existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
@@ -18,7 +15,7 @@ import { dirname, join } from "node:path";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const appDir = join(root, "src", "app");
-const tomlPath = join(root, "netlify.toml");
+const edgeFnPath = join(root, "netlify", "edge-functions", "app-proxy.ts");
 
 // 1. Discover marketing page routes (directories with a page.tsx), skipping
 //    /api routes and dynamic segments (which aren't simple marketing pages).
@@ -28,7 +25,7 @@ function findPageRoutes(dir, base = "") {
     if (entry.startsWith(".")) continue;
     const full = join(dir, entry);
     if (!statSync(full).isDirectory()) continue;
-    if (entry === "api") continue; // API routes are handled by their own rule
+    if (entry === "api") continue; // API routes are covered by the /api/ prefix
     if (entry.startsWith("[")) continue; // dynamic route — flag manually if added
     // Route groups like (marketing) don't add a URL segment
     const segment = entry.startsWith("(") && entry.endsWith(")") ? "" : entry;
@@ -43,43 +40,41 @@ const routes = new Set();
 if (existsSync(join(appDir, "page.tsx"))) routes.add("/");
 for (const r of findPageRoutes(appDir)) routes.add(r);
 
-// 2. Parse netlify.toml for keep-local rules (redirects whose target is NOT an
-//    external URL). Collect exact paths and prefix ("/x/*") paths.
-const toml = readFileSync(tomlPath, "utf8");
-const blocks = toml.split(/\[\[redirects\]\]/).slice(1);
-const exact = new Set();
-const prefixes = [];
-for (const block of blocks) {
-  const from = block.match(/from\s*=\s*"([^"]+)"/)?.[1];
-  const to = block.match(/to\s*=\s*"([^"]+)"/)?.[1];
-  if (!from || !to) continue;
-  if (/^https?:\/\//.test(to)) continue; // this is a proxy rule, not keep-local
-  if (from.endsWith("/*")) prefixes.push(from.slice(0, -2));
-  else exact.add(from);
-}
-
-const isCovered = (route) =>
-  exact.has(route) || prefixes.some((p) => route === p || route.startsWith(p + "/"));
-
-// 3. Report any marketing page not covered by a keep-local rule.
-const missing = [...routes].filter((r) => !isCovered(r));
-if (missing.length > 0) {
-  console.error("\n[31m✗ Netlify route guard failed.[0m");
+// 2. Read the LOCAL_PAGES array from the edge function.
+const edgeSrc = readFileSync(edgeFnPath, "utf8");
+const arrayMatch = edgeSrc.match(/const\s+LOCAL_PAGES\s*=\s*\[([^\]]*)\]/);
+if (!arrayMatch) {
   console.error(
-    "These marketing pages exist in src/app but have no keep-local rule in netlify.toml,"
+    "\n\x1b[31m✗ Netlify route guard: could not find LOCAL_PAGES in app-proxy.ts.\x1b[0m\n"
   );
-  console.error("so the \"/*\" catch-all would proxy them to app.parallelbase.io:\n");
-  for (const r of missing) {
-    console.error(`  ${r}`);
-    console.error(`      [[redirects]]`);
-    console.error(`        from = "${r}"`);
-    console.error(`        to = "${r}"`);
-    console.error(`        status = 200\n`);
-  }
+  process.exit(1);
+}
+const localPages = new Set(
+  [...arrayMatch[1].matchAll(/["']([^"']+)["']/g)].map((m) => m[1])
+);
+
+// 3. Report any marketing page not listed in LOCAL_PAGES.
+const missing = [...routes].filter((r) => !localPages.has(r));
+if (missing.length > 0) {
+  console.error("\n\x1b[31m✗ Netlify route guard failed.\x1b[0m");
   console.error(
-    "Add the block(s) above to netlify.toml (before the \"/*\" rule), then rebuild.\n"
+    "These marketing pages exist in src/app but are not listed as local pages in"
+  );
+  console.error(
+    "netlify/edge-functions/app-proxy.ts, so the proxy would send them to app.parallelbase.io:\n"
+  );
+  for (const r of missing) console.error(`  ${r}`);
+  console.error(
+    `\nAdd them to the LOCAL_PAGES array in netlify/edge-functions/app-proxy.ts:\n`
+  );
+  console.error(
+    `  const LOCAL_PAGES = [${[...localPages, ...missing]
+      .map((p) => `"${p}"`)
+      .join(", ")}];\n`
   );
   process.exit(1);
 }
 
-console.log(`✓ Netlify route guard: ${routes.size} marketing page(s) all kept local.`);
+console.log(
+  `✓ Netlify route guard: ${routes.size} marketing page(s) all served locally.`
+);

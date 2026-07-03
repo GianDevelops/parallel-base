@@ -64,9 +64,10 @@ Parallel Base (parallelbase.io) is a proptech company site. It sells high-perfor
 - `/studio` — Parallel Studio coming-soon page.
 
 ## App Proxy (parallelbase.io → app.parallelbase.io)
-- netlify.toml rewrites (status 200 = proxy, URL bar stays on parallelbase.io) send any path that ISN'T a marketing page/asset to `https://app.parallelbase.io/{same-path}`.
-- Marketing pages are kept local by explicit `[[redirects]]` rules above the `/*` catch-all. The catch-all is intentionally un-forced so real static files stay local.
-- **When you add a new marketing page under `src/app`, you must add a matching keep-local rule to netlify.toml.** A build guard (`scripts/check-netlify-routes.mjs`, run automatically before `next build`) fails the build with instructions if you forget — so this can't silently break.
+- Handled by a Netlify **edge function** at `netlify/edge-functions/app-proxy.ts`. Any path that ISN'T a marketing page/asset is proxied (server-side fetch, so the URL bar stays on parallelbase.io) to `https://app.parallelbase.io/{same-path}`.
+- Why an edge function and NOT a netlify.toml `/*` redirect: the Next.js plugin canonicalizes framework rules like `/_next/image` and forces them to the END of the redirect list — after any catch-all — so a redirect catch-all shadows the image optimizer and 502s every image. Edge functions run before redirects, so the function can let Next's own paths through and only proxy unknown paths.
+- Local paths (never proxied) are the `LOCAL_PAGES` array + `LOCAL_PREFIXES` (`/_next/`, `/_ipx/`, `/.netlify/`, `/api/`, `/images/`, `/fonts/`) + anything with a file extension.
+- **When you add a new marketing page under `src/app`, add its path to `LOCAL_PAGES` in `netlify/edge-functions/app-proxy.ts`.** A build guard (`scripts/check-netlify-routes.mjs`, run automatically before `next build`) fails the build with instructions if you forget — so this can't silently break.
 
 ## Key Decisions
 - All "Get Started" buttons link to /get-started (NOT "Order Now")
