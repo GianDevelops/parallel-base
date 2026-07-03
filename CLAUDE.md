@@ -66,7 +66,8 @@ Parallel Base (parallelbase.io) is a proptech company site. It sells high-perfor
 ## App Proxy (parallelbase.io → app.parallelbase.io)
 - Handled by a Netlify **edge function** at `netlify/edge-functions/app-proxy.ts`. Any path that ISN'T a marketing page/asset is proxied (server-side fetch, so the URL bar stays on parallelbase.io) to `https://app.parallelbase.io/{same-path}`.
 - Why an edge function and NOT a netlify.toml `/*` redirect: the Next.js plugin canonicalizes framework rules like `/_next/image` and forces them to the END of the redirect list — after any catch-all — so a redirect catch-all shadows the image optimizer and 502s every image. Edge functions run before redirects, so the function can let Next's own paths through and only proxy unknown paths.
-- Local paths (never proxied) are the `LOCAL_PAGES` array + `LOCAL_PREFIXES` (`/_next/`, `/_ipx/`, `/.netlify/`, `/api/`, `/images/`, `/fonts/`) + anything with a file extension.
+- Local paths (never proxied) are the `LOCAL_PAGES` array + `LOCAL_PREFIXES` (`/_ipx/`, `/.netlify/`, `/api/`, `/images/`, `/fonts/`) + anything with a file extension.
+- **`/_next/*` is local-first with proxy fallback:** both this site and the app are Next.js and emit `/_next/*` assets with different build hashes, so the function serves `/_next/*` locally and only proxies to `app.parallelbase.io/_next/*` on a local 404. This keeps the marketing homepage's assets working while letting proxied app pages (realtor cards like `/lucasgomez`) render styled. Do NOT use `assetPrefix` on the app to solve this — it crashes the app's Next.js middleware Edge Function.
 - **When you add a new marketing page under `src/app`, add its path to `LOCAL_PAGES` in `netlify/edge-functions/app-proxy.ts`.** A build guard (`scripts/check-netlify-routes.mjs`, run automatically before `next build`) fails the build with instructions if you forget — so this can't silently break.
 
 ## Key Decisions
