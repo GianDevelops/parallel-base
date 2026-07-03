@@ -61,6 +61,12 @@ Parallel Base (parallelbase.io) is a proptech company site. It sells high-perfor
 ## Pages
 - `/` — Main single-page site (all sections above)
 - `/get-started` — Placeholder page with "Your campaign starts here" and Contact Us CTA (mailto:gian@corexrealestate.com). Will eventually have an AI-powered ordering experience.
+- `/studio` — Parallel Studio coming-soon page.
+
+## App Proxy (parallelbase.io → app.parallelbase.io)
+- netlify.toml rewrites (status 200 = proxy, URL bar stays on parallelbase.io) send any path that ISN'T a marketing page/asset to `https://app.parallelbase.io/{same-path}`.
+- Marketing pages are kept local by explicit `[[redirects]]` rules above the `/*` catch-all. The catch-all is intentionally un-forced so real static files stay local.
+- **When you add a new marketing page under `src/app`, you must add a matching keep-local rule to netlify.toml.** A build guard (`scripts/check-netlify-routes.mjs`, run automatically before `next build`) fails the build with instructions if you forget — so this can't silently break.
 
 ## Key Decisions
 - All "Get Started" buttons link to /get-started (NOT "Order Now")

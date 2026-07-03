@@ -4,3 +4,58 @@
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
+
+# --- Proxy app paths to app.parallelbase.io ---
+# Anything that isn't a marketing page/asset is rewritten (status 200 = proxy,
+# so the URL bar keeps showing parallelbase.io) to the app subdomain.
+#
+# Netlify processes these top-to-bottom, first match wins. The keep-local rules
+# run before the catch-all so marketing pages, API routes, Next.js internals and
+# Netlify internals are served by this deploy. The catch-all is intentionally
+# NOT forced: real static files (logo, /images, /fonts, favicon) still win over
+# it and stay local, while unknown paths (no local file) fall through and proxy.
+
+# Keep Next.js internals local (static assets + dynamic image/data endpoints)
+[[redirects]]
+  from = "/_next/*"
+  to = "/_next/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/_ipx/*"
+  to = "/_ipx/:splat"
+  status = 200
+
+# Keep Netlify internals (function invocations, etc.) local
+[[redirects]]
+  from = "/.netlify/*"
+  to = "/.netlify/:splat"
+  status = 200
+
+# Keep API routes local
+[[redirects]]
+  from = "/api/*"
+  to = "/api/:splat"
+  status = 200
+
+# Keep the marketing pages local
+[[redirects]]
+  from = "/"
+  to = "/"
+  status = 200
+
+[[redirects]]
+  from = "/get-started"
+  to = "/get-started"
+  status = 200
+
+[[redirects]]
+  from = "/studio"
+  to = "/studio"
+  status = 200
+
+# Everything else -> proxy to the app, URL bar unchanged
+[[redirects]]
+  from = "/*"
+  to = "https://app.parallelbase.io/:splat"
+  status = 200

@@ -12,6 +12,7 @@ const engineLinks = [
 const systemLinks = [
   { label: "Get Started", href: "/get-started", accent: true },
   { label: "Contact", href: "mailto:gian@corexrealestate.com" },
+  { label: "Team Sign In", href: "https://app.parallelbase.io" },
   { label: "Privacy Policy", href: "#" },
   { label: "Terms of Service", href: "#" },
 ];
